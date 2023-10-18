@@ -1,0 +1,15 @@
+{
+  "name": "node-altjtalk-binding-darwin-universal",
+  "version": "0.0.0",
+  "os": [
+    "darwin"
+  ],
+  "main": "node-altjtalk-binding.darwin-universal.node",
+  "files": [
+    "node-altjtalk-binding.darwin-universal.node"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">= 10"
+  }
+}
