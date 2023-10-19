@@ -34,7 +34,8 @@
     "prepublishOnly": "napi prepublish -t npm",
     "test": "ava",
     "universal": "napi universal",
-    "version": "napi version"
+    "version": "napi version",
+    "postinstall": "node install.mjs"
   },
   "packageManager": "yarn@3.6.4"
 }

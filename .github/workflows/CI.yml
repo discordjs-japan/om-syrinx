@@ -140,6 +140,8 @@ jobs:
             echo "Prerelease"
             echo "prerelease=true" >> $GITHUB_OUTPUT
           fi
+      - name: Create node package
+        run: tar czvf node.tar.gz install.mjs index.js index.d.ts package.json 
       - name: Create release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -147,3 +149,4 @@ jobs:
           prerelease: ${{ steps.check-tag.outputs.prerelease == 'true' }}
           files: |
             **/*.node
+            node.tar.gz
