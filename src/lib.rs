@@ -3,9 +3,12 @@
 use htsengine::HTSEngine;
 use jpreprocess::{JPreprocess, JPreprocessConfig, SystemDictionaryConfig};
 use napi::{bindgen_prelude::Int16Array, Error, Status};
+use synthesis_option::SynthesisOption;
 
 #[macro_use]
 extern crate napi_derive;
+
+mod synthesis_option;
 
 #[napi(object)]
 pub struct AltJTalkConfig {
@@ -37,7 +40,12 @@ impl AltJTalk {
     })
   }
   #[napi]
-  pub fn synthesize(&mut self, input_text: String) -> Result<Int16Array, Error> {
+  pub fn synthesize(
+    &mut self,
+    input_text: String,
+    option: SynthesisOption,
+  ) -> Result<Int16Array, Error> {
+    option.apply_to_engine(&mut self.htsengine);
     let labels = self
       .jpreprocess
       .extract_fullcontext(&input_text)
