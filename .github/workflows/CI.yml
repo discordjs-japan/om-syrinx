@@ -97,6 +97,7 @@ jobs:
             ${{ env.APP_NAME }}.*.node
             index.js
             index.d.ts
+            package.json
           if-no-files-found: error
 
   universal-macOS:
