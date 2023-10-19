@@ -84,11 +84,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: bindings-${{ matrix.settings.target }}
-          path: |
-            ${{ env.APP_NAME }}.*.node
-            index.js
-            index.d.ts
-            package.json
+          path: ${{ env.APP_NAME }}.*.node
           if-no-files-found: error
 
   universal-macOS:
@@ -150,5 +146,4 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: ${{ steps.check-tag.outputs.prerelease == 'true' }}
           files: |
-            **/*.zip
-            **/*.tar.gz
+            **/*.node
