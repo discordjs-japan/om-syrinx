@@ -148,7 +148,11 @@ jobs:
             echo "prerelease=true" >> $GITHUB_OUTPUT
           fi
       - name: Create node package
-        run: tar czvf node.tar.gz install.mjs index.js index.d.ts package.json 
+        run: |
+          mkdir package
+          cp install.mjs index.js index.d.ts package.json LICENSE README.md package/
+          tar czvf node.tar.gz package
+          rm -r package
       - name: Create release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
