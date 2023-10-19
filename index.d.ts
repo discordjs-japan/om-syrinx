@@ -9,5 +9,5 @@ export interface AltJTalkConfig {
 }
 export class AltJTalk {
   static fromConfig(config: AltJTalkConfig): AltJTalk
-  synthesize(inputText: string): Array<number>
+  synthesize(inputText: string): Int16Array
 }

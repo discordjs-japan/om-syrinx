@@ -2,7 +2,7 @@
 
 use htsengine::HTSEngine;
 use jpreprocess::{JPreprocess, JPreprocessConfig, SystemDictionaryConfig};
-use napi::{Error, Status};
+use napi::{bindgen_prelude::Int16Array, Error, Status};
 
 #[macro_use]
 extern crate napi_derive;
@@ -37,7 +37,7 @@ impl AltJTalk {
     })
   }
   #[napi]
-  pub fn synthesize(&mut self, input_text: String) -> Result<Vec<i16>, Error> {
+  pub fn synthesize(&mut self, input_text: String) -> Result<Int16Array, Error> {
     let labels = self
       .jpreprocess
       .extract_fullcontext(&input_text)
@@ -57,6 +57,6 @@ impl AltJTalk {
         }
       })
       .collect();
-    Ok(audio)
+    Ok(Int16Array::new(audio))
   }
 }
