@@ -1,21 +1,12 @@
 name: CI
 env:
-  DEBUG: napi:*
   APP_NAME: node-altjtalk-binding
-  MACOSX_DEPLOYMENT_TARGET: '10.13'
+
 on:
   push:
-    branches:
-      - main
-    tags-ignore:
-      - '**'
-    paths-ignore:
-      - '**/*.md'
-      - LICENSE
-      - '**/*.gitignore'
-      - .editorconfig
-      - docs/**
-  pull_request: null
+    tags:
+      - v*.*.*
+
 jobs:
   build:
     strategy:
@@ -138,7 +129,7 @@ jobs:
     name: Create Release
     permissions:
       contents: write
-    needs: build
+    needs: [ build, universal-macOS ]
     runs-on: ubuntu-latest
     steps:
       - name: Download All Artifacts
