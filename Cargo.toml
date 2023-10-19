@@ -11,6 +11,9 @@ crate-type = ["cdylib"]
 napi = { version = "2.12.2", default-features = false, features = ["napi4"] }
 napi-derive = "2.12.2"
 
+jpreprocess = "0.6.0"
+htsengine = { git = "https://github.com/jpreprocess/htsengine-rs.git" }
+
 [build-dependencies]
 napi-build = "2.0.1"
 
