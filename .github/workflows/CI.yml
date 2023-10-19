@@ -149,7 +149,7 @@ jobs:
     name: Create Release
     permissions:
       contents: write
-    needs: [ build, universal-macOS ]
+    needs: [ build, universal-macOS, node-package ]
     runs-on: ubuntu-latest
     steps:
       - name: Download All Artifacts
