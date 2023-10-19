@@ -16,42 +16,45 @@ jobs:
           - host: macos-latest
             target: x86_64-apple-darwin
             build: |
-              yarn build
+              pnpm build
               strip -x *.node
           - host: windows-latest
-            build: yarn build
+            build: pnpm build
             target: x86_64-pc-windows-msvc
           - host: macos-latest
             target: aarch64-apple-darwin
             build: |
-              yarn build --target aarch64-apple-darwin
+              pnpm build --target aarch64-apple-darwin
               strip -x *.node
           - host: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             build: |-
               set -e &&
-              yarn build --target x86_64-unknown-linux-gnu &&
+              pnpm build --target x86_64-unknown-linux-gnu &&
               strip *.node
           - host: ubuntu-latest
             target: aarch64-unknown-linux-gnu
             cross: gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
             build: |-
-              yarn build --target aarch64-unknown-linux-gnu
+              pnpm build --target aarch64-unknown-linux-gnu
               aarch64-linux-gnu-strip *.node
           - host: windows-latest
             target: aarch64-pc-windows-msvc
-            build: yarn build --target aarch64-pc-windows-msvc
+            build: pnpm build --target aarch64-pc-windows-msvc
     name: stable - ${{ matrix.settings.target }} - node@20
     runs-on: ${{ matrix.settings.host }}
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - name: Setup node
         uses: actions/setup-node@v3
         if: ${{ !matrix.settings.docker }}
         with:
           node-version: 20
           check-latest: true
-          cache: yarn
+          cache: pnpm
       - name: Install
         uses: dtolnay/rust-toolchain@stable
         if: ${{ !matrix.settings.docker }}
@@ -76,7 +79,7 @@ jobs:
         if: ${{ matrix.settings.cross }}
         run: sudo apt-get update && sudo apt-get install -y ${{ matrix.settings.cross }}
       - name: Install dependencies
-        run: yarn install
+        run: pnpm install
       - name: Build
         run: ${{ matrix.settings.build }}
         shell: bash
@@ -94,14 +97,17 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - name: Setup node
         uses: actions/setup-node@v3
         with:
           node-version: 18
           check-latest: true
-          cache: yarn
+          cache: pnpm
       - name: Install dependencies
-        run: yarn install
+        run: pnpm install
       - name: Download macOS x64 artifact
         uses: actions/download-artifact@v3
         with:
@@ -113,7 +119,7 @@ jobs:
           name: bindings-aarch64-apple-darwin
           path: artifacts
       - name: Combine binaries
-        run: yarn universal
+        run: pnpm universal
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
