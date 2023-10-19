@@ -127,6 +127,24 @@ jobs:
           path: ${{ env.APP_NAME }}.*.node
           if-no-files-found: error
 
+  node-package:
+    name: Create Node package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Create node package
+        run: |
+          mkdir package
+          cp install.mjs index.js index.d.ts package.json LICENSE README.md package/
+          tar czvf node.tar.gz package
+          rm -r package
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: node-package
+          path: node.tar.gz
+          if-no-files-found: error
+
   create-release:
     name: Create Release
     permissions:
@@ -134,7 +152,6 @@ jobs:
     needs: [ build, universal-macOS ]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
       - name: Download All Artifacts
         uses: actions/download-artifact@v3
       - name: Check Tag
@@ -147,12 +164,6 @@ jobs:
             echo "Prerelease"
             echo "prerelease=true" >> $GITHUB_OUTPUT
           fi
-      - name: Create node package
-        run: |
-          mkdir package
-          cp install.mjs index.js index.d.ts package.json LICENSE README.md package/
-          tar czvf node.tar.gz package
-          rm -r package
       - name: Create release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -160,4 +171,4 @@ jobs:
           prerelease: ${{ steps.check-tag.outputs.prerelease == 'true' }}
           files: |
             **/*.node
-            node.tar.gz
+            **/*.tar.gz
