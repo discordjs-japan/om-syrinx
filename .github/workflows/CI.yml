@@ -87,7 +87,7 @@ jobs:
         shell: bash
       - name: Setup cross compiler
         if: ${{ matrix.settings.cross }}
-        run: apt-get update && apt-get install -y ${{ matrix.settings.cross }}
+        run: sudo apt-get update && sudo apt-get install -y ${{ matrix.settings.cross }}
       - name: Install dependencies
         run: yarn install
       - name: Build
