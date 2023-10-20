@@ -46,8 +46,13 @@ pub struct SynthesisOption {
 impl SynthesisOption {
   pub fn apply_to_engine(&self, engine: &mut HTSEngine) {
     engine.set_sampling_frequency(self.sampling_frequency.unwrap_or(48000) as usize);
-    engine.set_fperiod(self.frame_period.unwrap_or(1) as usize);
-    engine.set_alpha(self.all_pass_constant.unwrap_or(0.));
+    if let Some(frame_period) = self.frame_period {
+      engine.set_fperiod(frame_period as usize);
+    }
+    if let Some(all_pass_constant) = self.all_pass_constant {
+      engine.set_alpha(all_pass_constant);
+    }
+
     engine.set_beta(self.postfiltering_coefficient.unwrap_or(0.));
     engine.set_speed(self.speech_speed_rate.unwrap_or(1.));
     engine.add_half_tone(self.additional_half_tone.unwrap_or(0.));
