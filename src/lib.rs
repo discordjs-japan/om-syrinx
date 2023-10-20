@@ -45,6 +45,10 @@ impl AltJTalk {
     input_text: String,
     option: SynthesisOption,
   ) -> Result<Int16Array, Error> {
+    if input_text.is_empty() {
+      return Ok(Int16Array::new(vec![]));
+    }
+
     option.apply_to_engine(&mut self.htsengine);
     let labels = self
       .jpreprocess
