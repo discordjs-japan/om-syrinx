@@ -20,6 +20,8 @@ pub struct AltJTalkConfig {
 pub struct AltJTalk {
   jpreprocess: JPreprocess,
   htsengine: HTSEngine,
+
+  default_options: SynthesisOption,
 }
 
 #[napi]
@@ -30,6 +32,9 @@ impl AltJTalk {
     htsengine
       .load(vec![config.model])
       .map_err(|err| Error::new(Status::InvalidArg, err))?;
+
+    let default_options = SynthesisOption::from_engine(&htsengine);
+
     Ok(Self {
       jpreprocess: JPreprocess::from_config(JPreprocessConfig {
         dictionary: SystemDictionaryConfig::File(config.dictionary.into()),
@@ -37,6 +42,7 @@ impl AltJTalk {
       })
       .map_err(|err| Error::new(Status::InvalidArg, err))?,
       htsengine,
+      default_options,
     })
   }
   #[napi]
@@ -49,7 +55,7 @@ impl AltJTalk {
       return Ok(Int16Array::new(vec![]));
     }
 
-    option.apply_to_engine(&mut self.htsengine);
+    option.apply_to_engine(&mut self.htsengine, &self.default_options);
     let labels = self
       .jpreprocess
       .extract_fullcontext(&input_text)

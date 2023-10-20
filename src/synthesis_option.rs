@@ -44,15 +44,34 @@ pub struct SynthesisOption {
 }
 
 impl SynthesisOption {
-  pub fn apply_to_engine(&self, engine: &mut HTSEngine) {
-    engine.set_sampling_frequency(self.sampling_frequency.unwrap_or(48000) as usize);
-    if let Some(frame_period) = self.frame_period {
-      engine.set_fperiod(frame_period as usize);
+  pub fn from_engine(engine: &HTSEngine) -> Self {
+    Self {
+      sampling_frequency: Some(engine.get_sampling_frequency() as u32),
+      frame_period: Some(engine.get_fperiod() as u32),
+      all_pass_constant: Some(engine.get_alpha()),
+      postfiltering_coefficient: Some(engine.get_beta()),
+      speech_speed_rate: None,
+      additional_half_tone: None,
+      voiced_unvoiced_threshold: Some(engine.get_msd_threshold(1)),
+      weight_of_gv_for_spectrum: Some(engine.get_gv_weight(0)),
+      weight_of_gv_for_log_f0: Some(engine.get_gv_weight(1)),
+      volume_in_db: Some(engine.get_volume()),
     }
-    if let Some(all_pass_constant) = self.all_pass_constant {
-      engine.set_alpha(all_pass_constant);
-    }
-
+  }
+  pub fn apply_to_engine(&self, engine: &mut HTSEngine, default: &Self) {
+    engine.set_sampling_frequency(
+      self
+        .sampling_frequency
+        .or(default.sampling_frequency)
+        .unwrap_or(48000) as usize,
+    );
+    engine.set_fperiod(self.frame_period.or(default.frame_period).unwrap_or(240) as usize);
+    engine.set_alpha(
+      self
+        .all_pass_constant
+        .or(default.all_pass_constant)
+        .unwrap_or(0.55),
+    );
     engine.set_beta(self.postfiltering_coefficient.unwrap_or(0.));
     engine.set_speed(self.speech_speed_rate.unwrap_or(1.));
     engine.add_half_tone(self.additional_half_tone.unwrap_or(0.));
