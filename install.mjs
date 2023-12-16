@@ -2,7 +2,7 @@
 
 import fs from "node:fs/promises"
 import path from "node:path";
-
+import { fileURLToPath } from "node:url";
 // If this program is running on node-altjtalk-binding repo,
 // do not download prebuilt binary
 const isRepo = await fs.access("build.rs").then(() => true, () => false);
@@ -26,7 +26,7 @@ async function isMusl() {
 
 const baseUrl = "https://github.com/femshima/node-altjtalk-binding/releases/download";
 
-const file = new URL(import.meta.url).pathname;
+const file = fileURLToPath(import.meta.url);
 const dir = path.dirname(file);
 
 const packageJSON = JSON.parse(
