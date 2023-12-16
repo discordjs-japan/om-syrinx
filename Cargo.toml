@@ -1,7 +1,7 @@
 [package]
 edition = "2021"
 name = "node-altjtalk-binding"
-version = "0.0.0"
+version = "0.1.4"
 
 [lib]
 crate-type = ["cdylib"]
