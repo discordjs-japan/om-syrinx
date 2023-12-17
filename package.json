@@ -1,6 +1,6 @@
 {
   "name": "node-altjtalk-binding",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "main": "index.js",
   "types": "index.d.ts",
   "napi": {
