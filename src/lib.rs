@@ -51,15 +51,15 @@ impl AltJTalk {
     input_text: String,
     option: SynthesisOption,
   ) -> Result<Int16Array, Error> {
-    if input_text.is_empty() {
-      return Ok(Int16Array::new(vec![]));
-    }
-
     option.apply_to_engine(&mut self.htsengine, &self.default_options);
     let labels = self
       .jpreprocess
       .extract_fullcontext(&input_text)
       .map_err(|err| Error::new(Status::Unknown, err))?;
+    if labels.len() <= 2 {
+      return Ok(Int16Array::new(vec![]));
+    }
+
     let audio: Vec<i16> = self
       .htsengine
       .synthesize(labels)
