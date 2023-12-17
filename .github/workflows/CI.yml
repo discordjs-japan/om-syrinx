@@ -71,9 +71,16 @@ jobs:
             .cargo-cache
             target/
           key: ${{ matrix.settings.target }}-cargo-${{ matrix.settings.host }}
-      - name: Setup toolchain
-        run: ${{ matrix.settings.setup }}
-        if: ${{ matrix.settings.setup }}
+      - name: Setup config
+        run: |
+          cat <<EOF > ~/.cargo/config.toml
+          [target.aarch64-unknown-linux-musl]
+          linker = "aarch64-linux-musl-gcc"
+          rustflags = ["-C", "target-feature=-crt-static"]
+          
+          [target.aarch64-unknown-linux-gnu]
+          linker = "aarch64-linux-gnu-gcc"
+          EOF
         shell: bash
       - name: Setup cross compiler
         if: ${{ matrix.settings.cross }}
