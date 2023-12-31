@@ -1,4 +1,4 @@
-use htsengine::HTSEngine;
+use jbonsai::engine::Condition;
 
 #[napi(object)]
 pub struct SynthesisOption {
@@ -41,43 +41,73 @@ pub struct SynthesisOption {
   /// Volume in dB
   /// Default is 0.0.
   pub volume_in_db: Option<f64>,
+
+  /// Interporation weights
+  pub interporation_weight: Option<InterporationWeight>,
+}
+
+#[napi(object)]
+pub struct InterporationWeight {
+  /// Duration
+  pub duration: Option<Vec<f64>>,
+  /// Stream #0
+  pub spectrum: Option<Vec<f64>>,
+  /// Stream #1
+  pub log_f0: Option<Vec<f64>>,
+  /// Stream #2
+  pub lpf: Option<Vec<f64>>,
 }
 
 impl SynthesisOption {
-  pub fn from_engine(engine: &HTSEngine) -> Self {
-    Self {
-      sampling_frequency: Some(engine.get_sampling_frequency() as u32),
-      frame_period: Some(engine.get_fperiod() as u32),
-      all_pass_constant: Some(engine.get_alpha()),
-      postfiltering_coefficient: Some(engine.get_beta()),
-      speech_speed_rate: None,
-      additional_half_tone: None,
-      voiced_unvoiced_threshold: Some(engine.get_msd_threshold(1)),
-      weight_of_gv_for_spectrum: Some(engine.get_gv_weight(0)),
-      weight_of_gv_for_log_f0: Some(engine.get_gv_weight(1)),
-      volume_in_db: Some(engine.get_volume()),
+  pub fn apply_to_engine(&self, condition: &mut Condition) {
+    if let Some(sampling_frequency) = self.sampling_frequency {
+      condition.set_sampling_frequency(sampling_frequency as usize);
     }
-  }
-  pub fn apply_to_engine(&self, engine: &mut HTSEngine, default: &Self) {
-    engine.set_sampling_frequency(
-      self
-        .sampling_frequency
-        .or(default.sampling_frequency)
-        .unwrap_or(48000) as usize,
-    );
-    engine.set_fperiod(self.frame_period.or(default.frame_period).unwrap_or(240) as usize);
-    engine.set_alpha(
-      self
-        .all_pass_constant
-        .or(default.all_pass_constant)
-        .unwrap_or(0.55),
-    );
-    engine.set_beta(self.postfiltering_coefficient.unwrap_or(0.));
-    engine.set_speed(self.speech_speed_rate.unwrap_or(1.));
-    engine.add_half_tone(self.additional_half_tone.unwrap_or(0.));
-    engine.set_msd_threshold(1, self.voiced_unvoiced_threshold.unwrap_or(0.5));
-    engine.set_gv_weight(0, self.weight_of_gv_for_spectrum.unwrap_or(1.));
-    engine.set_gv_weight(1, self.weight_of_gv_for_log_f0.unwrap_or(1.));
-    engine.set_volume(self.volume_in_db.unwrap_or(0.));
+    if let Some(fperiod) = self.frame_period {
+      condition.set_fperiod(fperiod as usize);
+    }
+    if let Some(alpha) = self.all_pass_constant {
+      condition.set_alpha(alpha);
+    }
+    if let Some(beta) = self.postfiltering_coefficient {
+      condition.set_beta(beta);
+    }
+    if let Some(speech_speed_rate) = self.speech_speed_rate {
+      condition.set_speed(speech_speed_rate);
+    }
+    if let Some(additional_half_tone) = self.additional_half_tone {
+      condition.set_additional_half_tone(additional_half_tone);
+    }
+    if let Some(voiced_unvoiced_threshold) = self.voiced_unvoiced_threshold {
+      condition.set_msd_threshold(1, voiced_unvoiced_threshold);
+    }
+    if let Some(weight_of_gv_for_spectrum) = self.weight_of_gv_for_spectrum {
+      condition.set_gv_weight(0, weight_of_gv_for_spectrum);
+    }
+    if let Some(weight_of_gv_for_log_f0) = self.weight_of_gv_for_log_f0 {
+      condition.set_gv_weight(1, weight_of_gv_for_log_f0);
+    }
+    if let Some(volume_in_db) = self.volume_in_db {
+      condition.set_volume(volume_in_db);
+    }
+
+    if let Some(ref weights) = self.interporation_weight {
+      let iw = condition.get_interporation_weight_mut();
+      if let Some(ref duration) = weights.duration {
+        iw.set_duration(duration.to_owned());
+      }
+      if let Some(ref spectrum) = weights.spectrum {
+        iw.set_parameter(0, spectrum.to_owned());
+        iw.set_gv(0, spectrum.to_owned());
+      }
+      if let Some(ref log_f0) = weights.log_f0 {
+        iw.set_parameter(0, log_f0.to_owned());
+        iw.set_gv(0, log_f0.to_owned());
+      }
+      if let Some(ref lpf) = weights.lpf {
+        iw.set_parameter(0, lpf.to_owned());
+        iw.set_gv(0, lpf.to_owned());
+      }
+    }
   }
 }

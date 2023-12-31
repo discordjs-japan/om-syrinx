@@ -54,10 +54,23 @@ export interface SynthesisOption {
    * Default is 0.0.
    */
   volumeInDb?: number
+  /** Interporation weights */
+  interporationWeight?: InterporationWeight
+}
+export interface InterporationWeight {
+  /** Duration */
+  duration?: Array<number>
+  /** Stream #0 */
+  spectrum?: Array<number>
+  /** Stream #1 */
+  logF0?: Array<number>
+  /** Stream #2 */
+  lpf?: Array<number>
 }
 export interface AltJTalkConfig {
   dictionary: string
-  model: string
+  userDictionary?: string
+  models: Array<string>
 }
 export class AltJTalk {
   static fromConfig(config: AltJTalkConfig): AltJTalk
