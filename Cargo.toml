@@ -12,7 +12,7 @@ napi = { version = "2.12.2", default-features = false, features = ["napi4"] }
 napi-derive = "2.12.2"
 
 jpreprocess = "0.6.3"
-htsengine = { version = "0.2.0", git = "https://github.com/jpreprocess/htsengine-rs.git" }
+jbonsai = { git = "https://github.com/jpreprocess/jbonsai.git" }
 
 [build-dependencies]
 napi-build = "2.0.1"

@@ -1,4 +1,4 @@
-use htsengine::HTSEngine;
+use jbonsai::engine::Condition;
 
 #[napi(object)]
 pub struct SynthesisOption {
@@ -44,40 +44,40 @@ pub struct SynthesisOption {
 }
 
 impl SynthesisOption {
-  pub fn from_engine(engine: &HTSEngine) -> Self {
+  pub fn from_engine(condition: &Condition) -> Self {
     Self {
-      sampling_frequency: Some(engine.get_sampling_frequency() as u32),
-      frame_period: Some(engine.get_fperiod() as u32),
-      all_pass_constant: Some(engine.get_alpha()),
-      postfiltering_coefficient: Some(engine.get_beta()),
+      sampling_frequency: Some(condition.get_sampling_frequency() as u32),
+      frame_period: Some(condition.get_fperiod() as u32),
+      all_pass_constant: Some(condition.get_alpha()),
+      postfiltering_coefficient: Some(condition.get_beta()),
       speech_speed_rate: None,
       additional_half_tone: None,
-      voiced_unvoiced_threshold: Some(engine.get_msd_threshold(1)),
-      weight_of_gv_for_spectrum: Some(engine.get_gv_weight(0)),
-      weight_of_gv_for_log_f0: Some(engine.get_gv_weight(1)),
-      volume_in_db: Some(engine.get_volume()),
+      voiced_unvoiced_threshold: Some(condition.get_msd_threshold(1)),
+      weight_of_gv_for_spectrum: Some(condition.get_gv_weight(0)),
+      weight_of_gv_for_log_f0: Some(condition.get_gv_weight(1)),
+      volume_in_db: Some(condition.get_volume()),
     }
   }
-  pub fn apply_to_engine(&self, engine: &mut HTSEngine, default: &Self) {
-    engine.set_sampling_frequency(
+  pub fn apply_to_engine(&self, condition: &mut Condition, default: &Self) {
+    condition.set_sampling_frequency(
       self
         .sampling_frequency
         .or(default.sampling_frequency)
         .unwrap_or(48000) as usize,
     );
-    engine.set_fperiod(self.frame_period.or(default.frame_period).unwrap_or(240) as usize);
-    engine.set_alpha(
+    condition.set_fperiod(self.frame_period.or(default.frame_period).unwrap_or(240) as usize);
+    condition.set_alpha(
       self
         .all_pass_constant
         .or(default.all_pass_constant)
         .unwrap_or(0.55),
     );
-    engine.set_beta(self.postfiltering_coefficient.unwrap_or(0.));
-    engine.set_speed(self.speech_speed_rate.unwrap_or(1.));
-    engine.add_half_tone(self.additional_half_tone.unwrap_or(0.));
-    engine.set_msd_threshold(1, self.voiced_unvoiced_threshold.unwrap_or(0.5));
-    engine.set_gv_weight(0, self.weight_of_gv_for_spectrum.unwrap_or(1.));
-    engine.set_gv_weight(1, self.weight_of_gv_for_log_f0.unwrap_or(1.));
-    engine.set_volume(self.volume_in_db.unwrap_or(0.));
+    condition.set_beta(self.postfiltering_coefficient.unwrap_or(0.));
+    condition.set_speed(self.speech_speed_rate.unwrap_or(1.));
+    condition.set_additional_half_tone(self.additional_half_tone.unwrap_or(0.));
+    condition.set_msd_threshold(1, self.voiced_unvoiced_threshold.unwrap_or(0.5));
+    condition.set_gv_weight(0, self.weight_of_gv_for_spectrum.unwrap_or(1.));
+    condition.set_gv_weight(1, self.weight_of_gv_for_log_f0.unwrap_or(1.));
+    condition.set_volume(self.volume_in_db.unwrap_or(0.));
   }
 }

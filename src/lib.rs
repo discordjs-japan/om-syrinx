@@ -1,6 +1,6 @@
 #![deny(clippy::all)]
 
-use htsengine::HTSEngine;
+use jbonsai::engine::Engine;
 use jpreprocess::{JPreprocess, JPreprocessConfig, SystemDictionaryConfig};
 use napi::{bindgen_prelude::Int16Array, Error, Status};
 use synthesis_option::SynthesisOption;
@@ -19,7 +19,7 @@ pub struct AltJTalkConfig {
 #[napi]
 pub struct AltJTalk {
   jpreprocess: JPreprocess,
-  htsengine: HTSEngine,
+  jbonsai: Engine,
 
   default_options: SynthesisOption,
 }
@@ -28,12 +28,9 @@ pub struct AltJTalk {
 impl AltJTalk {
   #[napi(factory)]
   pub fn from_config(config: AltJTalkConfig) -> Result<Self, Error> {
-    let mut htsengine = HTSEngine::new();
-    htsengine
-      .load(vec![config.model])
-      .map_err(|err| Error::new(Status::InvalidArg, err))?;
+    let jbonsai = Engine::load(&[config.model]);
 
-    let default_options = SynthesisOption::from_engine(&htsengine);
+    let default_options = SynthesisOption::from_engine(&jbonsai.condition);
 
     Ok(Self {
       jpreprocess: JPreprocess::from_config(JPreprocessConfig {
@@ -41,7 +38,7 @@ impl AltJTalk {
         user_dictionary: None,
       })
       .map_err(|err| Error::new(Status::InvalidArg, err))?,
-      htsengine,
+      jbonsai,
       default_options,
     })
   }
@@ -51,7 +48,7 @@ impl AltJTalk {
     input_text: String,
     option: SynthesisOption,
   ) -> Result<Int16Array, Error> {
-    option.apply_to_engine(&mut self.htsengine, &self.default_options);
+    option.apply_to_engine(&mut self.jbonsai.condition, &self.default_options);
     let labels = self
       .jpreprocess
       .extract_fullcontext(&input_text)
@@ -60,18 +57,18 @@ impl AltJTalk {
       return Ok(Int16Array::new(vec![]));
     }
 
+    self.jbonsai.synthesize_from_strings(&labels);
     let audio: Vec<i16> = self
-      .htsengine
-      .synthesize(labels)
-      .map_err(|err| Error::new(Status::Unknown, err))?
-      .into_iter()
+      .jbonsai
+      .get_generated_speech()
+      .iter()
       .map(|d| {
-        if d < (i16::MIN as f64) {
+        if *d < (i16::MIN as f64) {
           i16::MIN
-        } else if d > (i16::MAX as f64) {
+        } else if *d > (i16::MAX as f64) {
           i16::MAX
         } else {
-          d as i16
+          *d as i16
         }
       })
       .collect();
