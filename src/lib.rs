@@ -1,7 +1,8 @@
 #![deny(clippy::all)]
 
-use jbonsai::engine::Engine;
+use jbonsai::engine::{Condition, Engine};
 use jpreprocess::{JPreprocess, JPreprocessConfig, SystemDictionaryConfig};
+use lindera_dictionary::UserDictionaryConfig;
 use napi::{bindgen_prelude::Int16Array, Error, Status};
 use synthesis_option::SynthesisOption;
 
@@ -13,7 +14,8 @@ mod synthesis_option;
 #[napi(object)]
 pub struct AltJTalkConfig {
   pub dictionary: String,
-  pub model: String,
+  pub user_dictionary: Option<String>,
+  pub models: Vec<String>,
 }
 
 #[napi]
@@ -21,21 +23,27 @@ pub struct AltJTalk {
   jpreprocess: JPreprocess,
   jbonsai: Engine,
 
-  default_options: SynthesisOption,
+  default_options: Condition,
 }
 
 #[napi]
 impl AltJTalk {
   #[napi(factory)]
   pub fn from_config(config: AltJTalkConfig) -> Result<Self, Error> {
-    let jbonsai = Engine::load(&[config.model]);
+    let jbonsai = Engine::load(&config.models);
 
-    let default_options = SynthesisOption::from_engine(&jbonsai.condition);
+    let default_options = jbonsai.condition.clone();
 
     Ok(Self {
       jpreprocess: JPreprocess::from_config(JPreprocessConfig {
         dictionary: SystemDictionaryConfig::File(config.dictionary.into()),
-        user_dictionary: None,
+        user_dictionary: config
+          .user_dictionary
+          .as_ref()
+          .map(|path| UserDictionaryConfig {
+            path: path.into(),
+            kind: None,
+          }),
       })
       .map_err(|err| Error::new(Status::InvalidArg, err))?,
       jbonsai,
@@ -48,7 +56,9 @@ impl AltJTalk {
     input_text: String,
     option: SynthesisOption,
   ) -> Result<Int16Array, Error> {
-    option.apply_to_engine(&mut self.jbonsai.condition, &self.default_options);
+    self.jbonsai.condition = self.default_options.clone();
+    option.apply_to_engine(&mut self.jbonsai.condition);
+
     let labels = self
       .jpreprocess
       .extract_fullcontext(&input_text)

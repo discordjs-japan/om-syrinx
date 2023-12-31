@@ -12,6 +12,7 @@ napi = { version = "2.12.2", default-features = false, features = ["napi4"] }
 napi-derive = "2.12.2"
 
 jpreprocess = "0.6.3"
+lindera-dictionary = { version = "0.27" }
 jbonsai = { git = "https://github.com/jpreprocess/jbonsai.git" }
 
 [build-dependencies]
