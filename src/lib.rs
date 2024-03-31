@@ -1,8 +1,9 @@
 #![deny(clippy::all)]
 
 use jbonsai::engine::{Condition, Engine};
-use jpreprocess::{DefaultFetcher, JPreprocess, JPreprocessConfig, SystemDictionaryConfig};
-use lindera_dictionary::UserDictionaryConfig;
+use jpreprocess::{
+  DefaultFetcher, JPreprocess, JPreprocessConfig, SystemDictionaryConfig, UserDictionaryConfig,
+};
 use napi::{bindgen_prelude::Int16Array, Error, Status};
 use synthesis_option::SynthesisOption;
 
