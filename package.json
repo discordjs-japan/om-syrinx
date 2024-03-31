@@ -7,6 +7,9 @@
     "name": "node-altjtalk-binding",
     "triples": {
       "additional": [
+        "aarch64-apple-darwin",
+        "aarch64-pc-windows-msvc",
+        "aarch64-unknown-linux-gnu",
         "universal-apple-darwin"
       ]
     }
@@ -19,14 +22,21 @@
   "engines": {
     "node": ">= 18"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/femshima/node-altjtalk-binding.git"
+  },
   "scripts": {
     "artifacts": "napi artifacts",
     "build": "napi build --platform --release",
     "build:debug": "napi build --platform",
     "prepublishOnly": "napi prepublish -t npm",
     "universal": "napi universal",
-    "version": "napi version",
-    "postinstall": "node install.mjs"
+    "version": "napi version"
   },
   "packageManager": "pnpm@8.12.1"
 }

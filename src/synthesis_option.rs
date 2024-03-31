@@ -1,4 +1,7 @@
-use jbonsai::engine::Condition;
+use jbonsai::{
+  engine::Condition,
+  model::interporation_weight::{WeightError, Weights},
+};
 
 #[napi(object)]
 pub struct SynthesisOption {
@@ -59,7 +62,7 @@ pub struct InterporationWeight {
 }
 
 impl SynthesisOption {
-  pub fn apply_to_engine(&self, condition: &mut Condition) {
+  pub fn apply_to_engine(&self, condition: &mut Condition) -> Result<(), WeightError> {
     if let Some(sampling_frequency) = self.sampling_frequency {
       condition.set_sampling_frequency(sampling_frequency as usize);
     }
@@ -94,20 +97,26 @@ impl SynthesisOption {
     if let Some(ref weights) = self.interporation_weight {
       let iw = condition.get_interporation_weight_mut();
       if let Some(ref duration) = weights.duration {
-        iw.set_duration(duration.to_owned());
+        let duration = Weights::new(duration)?;
+        iw.set_duration(duration)?;
       }
       if let Some(ref spectrum) = weights.spectrum {
-        iw.set_parameter(0, spectrum.to_owned());
-        iw.set_gv(0, spectrum.to_owned());
+        let spectrum = Weights::new(spectrum)?;
+        iw.set_parameter(0, spectrum.clone())?;
+        iw.set_gv(0, spectrum)?;
       }
       if let Some(ref log_f0) = weights.log_f0 {
-        iw.set_parameter(0, log_f0.to_owned());
-        iw.set_gv(0, log_f0.to_owned());
+        let log_f0 = Weights::new(log_f0)?;
+        iw.set_parameter(0, log_f0.clone())?;
+        iw.set_gv(0, log_f0)?;
       }
       if let Some(ref lpf) = weights.lpf {
-        iw.set_parameter(0, lpf.to_owned());
-        iw.set_gv(0, lpf.to_owned());
+        let lpf = Weights::new(lpf)?;
+        iw.set_parameter(0, lpf.clone())?;
+        iw.set_gv(0, lpf)?;
       }
     }
+
+    Ok(())
   }
 }

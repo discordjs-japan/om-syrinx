@@ -1,8 +1,9 @@
 #![deny(clippy::all)]
 
 use jbonsai::engine::{Condition, Engine};
-use jpreprocess::{JPreprocess, JPreprocessConfig, SystemDictionaryConfig};
-use lindera_dictionary::UserDictionaryConfig;
+use jpreprocess::{
+  DefaultFetcher, JPreprocess, JPreprocessConfig, SystemDictionaryConfig, UserDictionaryConfig,
+};
 use napi::{bindgen_prelude::Int16Array, Error, Status};
 use synthesis_option::SynthesisOption;
 
@@ -20,7 +21,7 @@ pub struct AltJTalkConfig {
 
 #[napi]
 pub struct AltJTalk {
-  jpreprocess: JPreprocess,
+  jpreprocess: JPreprocess<DefaultFetcher>,
   jbonsai: Engine,
 
   default_options: Condition,
@@ -30,7 +31,8 @@ pub struct AltJTalk {
 impl AltJTalk {
   #[napi(factory)]
   pub fn from_config(config: AltJTalkConfig) -> Result<Self, Error> {
-    let jbonsai = Engine::load(&config.models);
+    let jbonsai =
+      Engine::load(&config.models).map_err(|err| Error::new(Status::InvalidArg, err))?;
 
     let default_options = jbonsai.condition.clone();
 
@@ -57,7 +59,9 @@ impl AltJTalk {
     option: SynthesisOption,
   ) -> Result<Int16Array, Error> {
     self.jbonsai.condition = self.default_options.clone();
-    option.apply_to_engine(&mut self.jbonsai.condition);
+    option
+      .apply_to_engine(&mut self.jbonsai.condition)
+      .map_err(|err| Error::new(Status::InvalidArg, err))?;
 
     let labels = self
       .jpreprocess
@@ -67,10 +71,10 @@ impl AltJTalk {
       return Ok(Int16Array::new(vec![]));
     }
 
-    self.jbonsai.synthesize_from_strings(&labels);
     let audio: Vec<i16> = self
       .jbonsai
-      .get_generated_speech()
+      .synthesize_from_labels(labels)
+      .map_err(|err| Error::new(Status::Unknown, err))?
       .iter()
       .map(|d| {
         if *d < (i16::MIN as f64) {
