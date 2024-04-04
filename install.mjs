@@ -5,7 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 // If this program is running on node-altjtalk-binding repo,
 // do not download prebuilt binary
-const isRepo = await fs.access("build.rs").then(() => true, () => false);
+const isRepo = await fs.access(".git").then(() => true, () => false);
 if (isRepo) process.exit(0);
 
 async function isMusl() {
