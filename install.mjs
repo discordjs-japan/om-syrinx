@@ -47,14 +47,21 @@ switch (platform) {
     break;
 }
 
-const fileName = `${packageName}.${platform}-${arch}${suffix}.node`
+/**
+ * @param {string} fileName
+ */
+async function download(fileName) {
+  const url = `${baseUrl}/${version}/${fileName}`
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Fetch failed.\nRequest to ${url} returned status code ${response.status}.`);
+  }
 
-const url = `${baseUrl}/${version}/${fileName}`
-
-const response = await fetch(url);
-if (!response.ok) {
-  throw new Error(`Fetch failed.\nRequest to ${url} returned status code ${response.status}.`);
+  const buf = await response.arrayBuffer();
+  await fs.writeFile(fileName, Buffer.from(buf));
 }
 
-const buf = await response.arrayBuffer();
-fs.writeFile(fileName, Buffer.from(buf));
+await Promise.all([
+  download(`${packageName}.${platform}-${arch}${suffix}.node`),
+  download("version.json"),
+]);
