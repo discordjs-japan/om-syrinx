@@ -3,6 +3,18 @@
   "version": "0.2.1",
   "main": "index.js",
   "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "require": "./index.js",
+      "types": "./index.d.ts"
+    },
+    "./version": {
+      "import": "./version.js",
+      "require": "./version.js",
+      "types": "./version.d.ts"
+    }
+  },
   "napi": {
     "name": "node-altjtalk-binding",
     "triples": {
