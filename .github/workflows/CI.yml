@@ -134,6 +134,22 @@ jobs:
           path: ${{ env.APP_NAME }}.*.node
           if-no-files-found: error
 
+  version:
+    name: Export version.json
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+      - run: ./version.sh
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: version
+          path: version.json
+          if-no-files-found: error
+
   node-package:
     name: Create Node package
     runs-on: ubuntu-latest
@@ -179,3 +195,4 @@ jobs:
           files: |
             **/*.node
             **/*.tar.gz
+            version.json
