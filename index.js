@@ -252,6 +252,9 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { AltJTalk } = nativeBinding
+const { EncoderType, Channels, Application, AltJTalk } = nativeBinding
 
+module.exports.EncoderType = EncoderType
+module.exports.Channels = Channels
+module.exports.Application = Application
 module.exports.AltJTalk = AltJTalk

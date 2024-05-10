@@ -1,91 +1,153 @@
 #![deny(clippy::all)]
 
-use jbonsai::engine::{Condition, Engine};
+use std::sync::Arc;
+
+use encoder::EncoderConfig;
+use jbonsai::engine::Engine;
 use jpreprocess::{
   DefaultFetcher, JPreprocess, JPreprocessConfig, SystemDictionaryConfig, UserDictionaryConfig,
 };
-use napi::{bindgen_prelude::Int16Array, Error, Status};
+use napi::{
+  bindgen_prelude::AsyncTask,
+  threadsafe_function::{ErrorStrategy, ThreadsafeFunction, ThreadsafeFunctionCallMode},
+  Env, Error, JsFunction, JsUndefined, Status, Task,
+};
 use synthesis_option::SynthesisOption;
 
 #[macro_use]
 extern crate napi_derive;
 
+mod encoder;
 mod synthesis_option;
 
-#[napi(object)]
-pub struct AltJTalkConfig {
-  pub dictionary: String,
-  pub user_dictionary: Option<String>,
-  pub models: Vec<String>,
-}
-
 #[napi]
-pub struct AltJTalk {
-  jpreprocess: JPreprocess<DefaultFetcher>,
-  jbonsai: Engine,
+pub struct AltJTalk(AltJtalkWorker);
 
-  default_options: Condition,
+// separate `impl` block because rust-analyzer fails to expand `#[napi]` on `impl` block with `#[napi(factory)]`
+#[napi]
+impl AltJTalk {
+  #[napi(factory)]
+  pub fn from_config(config: AltJTalkConfig) -> napi::Result<Self> {
+    Ok(Self(AltJtalkWorker::from_config(config)?))
+  }
 }
 
 #[napi]
 impl AltJTalk {
-  #[napi(factory)]
-  pub fn from_config(config: AltJTalkConfig) -> Result<Self, Error> {
-    let jbonsai =
-      Engine::load(&config.models).map_err(|err| Error::new(Status::InvalidArg, err))?;
-
-    let default_options = jbonsai.condition.clone();
-
-    Ok(Self {
-      jpreprocess: JPreprocess::from_config(JPreprocessConfig {
-        dictionary: SystemDictionaryConfig::File(config.dictionary.into()),
-        user_dictionary: config
-          .user_dictionary
-          .as_ref()
-          .map(|path| UserDictionaryConfig {
-            path: path.into(),
-            kind: None,
-          }),
-      })
-      .map_err(|err| Error::new(Status::InvalidArg, err))?,
-      jbonsai,
-      default_options,
-    })
-  }
-  #[napi]
+  #[napi(
+    ts_args_type = "inputText: string, option: SynthesisOption, push: (...args: [err: null, frame: Buffer] | [err: Error, frame: null]) => void"
+  )]
   pub fn synthesize(
     &mut self,
     input_text: String,
     option: SynthesisOption,
-  ) -> Result<Int16Array, Error> {
-    self.jbonsai.condition = self.default_options.clone();
-    option
-      .apply_to_engine(&mut self.jbonsai.condition)
+    push: JsFunction,
+  ) -> napi::Result<AsyncTask<SynthesizeTask>> {
+    let worker = self.0.clone();
+
+    let push = push.create_threadsafe_function(0, |ctx| {
+      let buffer = ctx.env.create_buffer_with_data(ctx.value)?;
+      Ok(vec![buffer.into_raw()])
+    })?;
+
+    Ok(AsyncTask::new(SynthesizeTask {
+      worker,
+      input_text,
+      option,
+      push,
+    }))
+  }
+}
+
+#[napi(object)]
+#[derive(Debug, Clone)]
+pub struct AltJTalkConfig {
+  pub dictionary: String,
+  pub user_dictionary: Option<String>,
+  pub models: Vec<String>,
+  pub encoder: EncoderConfig,
+}
+
+#[derive(Clone)]
+struct AltJtalkWorker {
+  jpreprocess: Arc<JPreprocess<DefaultFetcher>>,
+  jbonsai: Engine,
+  encoder_config: EncoderConfig,
+}
+
+impl AltJtalkWorker {
+  fn from_config(config: AltJTalkConfig) -> napi::Result<Self> {
+    let jpreprocess = JPreprocess::from_config(JPreprocessConfig {
+      dictionary: SystemDictionaryConfig::File(config.dictionary.into()),
+      user_dictionary: config
+        .user_dictionary
+        .as_ref()
+        .map(|path| UserDictionaryConfig {
+          path: path.into(),
+          kind: None,
+        }),
+    })
+    .map_err(|err| Error::new(Status::InvalidArg, err))?;
+    let jbonsai =
+      Engine::load(&config.models).map_err(|err| Error::new(Status::InvalidArg, err))?;
+
+    Ok(Self {
+      jpreprocess: Arc::new(jpreprocess),
+      jbonsai,
+      encoder_config: config.encoder,
+    })
+  }
+}
+
+pub struct SynthesizeTask {
+  worker: AltJtalkWorker,
+  input_text: String,
+  option: SynthesisOption,
+  push: ThreadsafeFunction<Vec<u8>, ErrorStrategy::CalleeHandled>,
+}
+
+impl Task for SynthesizeTask {
+  type Output = ();
+  type JsValue = JsUndefined;
+
+  fn compute(&mut self) -> napi::Result<Self::Output> {
+    self
+      .option
+      .apply_to_engine(&mut self.worker.jbonsai.condition)
       .map_err(|err| Error::new(Status::InvalidArg, err))?;
 
     let labels = self
+      .worker
       .jpreprocess
-      .extract_fullcontext(&input_text)
-      .map_err(|err| Error::new(Status::Unknown, err))?;
+      .extract_fullcontext(&self.input_text)
+      .map_err(|err| Error::new(Status::InvalidArg, err))?;
     if labels.len() <= 2 {
-      return Ok(Int16Array::new(vec![]));
+      return Ok(());
     }
 
-    let audio: Vec<i16> = self
+    let mut generator = self
+      .worker
       .jbonsai
-      .synthesize_from_labels(labels)
-      .map_err(|err| Error::new(Status::Unknown, err))?
-      .iter()
-      .map(|d| {
-        if *d < (i16::MIN as f64) {
-          i16::MIN
-        } else if *d > (i16::MAX as f64) {
-          i16::MAX
-        } else {
-          *d as i16
-        }
-      })
-      .collect();
-    Ok(Int16Array::new(audio))
+      .generator(labels)
+      .map_err(|err| Error::new(Status::InvalidArg, err))?;
+    let encoder = self
+      .worker
+      .encoder_config
+      .build(&self.worker.jbonsai.condition)?;
+
+    loop {
+      let buf = encoder.generate(&mut generator)?;
+      if buf.is_empty() {
+        return Ok(());
+      } else {
+        self
+          .push
+          .call(Ok(buf), ThreadsafeFunctionCallMode::Blocking);
+      }
+    }
+  }
+
+  fn resolve(&mut self, env: Env, _: Self::Output) -> napi::Result<Self::JsValue> {
+    env.get_undefined()
   }
 }
