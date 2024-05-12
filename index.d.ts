@@ -96,6 +96,11 @@ export interface SynthesisOption {
   volumeInDb?: number
   /** Interporation weights */
   interporationWeight?: InterporationWeight
+  /**
+   * Shorthand for [`SynthesisOption::interporation_weight`].
+   * Note that this option is ignored if [`SynthesisOption::interporation_weight`] exists.
+   */
+  voice?: number
 }
 /**
  * How loaded models are mixed.
