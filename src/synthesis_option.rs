@@ -1,5 +1,6 @@
 use jbonsai::{engine::Condition, model::interporation_weight::WeightError};
 
+/// Voice synthesis option.
 #[napi(object)]
 pub struct SynthesisOption {
   /// Frequency warping parameter alpha
@@ -38,6 +39,12 @@ pub struct SynthesisOption {
   pub interporation_weight: Option<InterporationWeight>,
 }
 
+/// How loaded models are mixed.
+///
+/// All weight array must:
+/// - be same length as loadad models.
+/// - have values between 0.0 and 1.0.
+/// - sum up to 1.0.
 #[napi(object)]
 pub struct InterporationWeight {
   /// Duration

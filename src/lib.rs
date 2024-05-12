@@ -20,12 +20,28 @@ extern crate napi_derive;
 mod encoder;
 mod synthesis_option;
 
+/// Configuration for `AltJTalk`.
+#[napi(object)]
+#[derive(Debug, Clone)]
+pub struct AltJTalkConfig {
+  /// Dictionary file path.
+  pub dictionary: String,
+  /// User dictionary file path.
+  pub user_dictionary: Option<String>,
+  /// Model file paths.
+  pub models: Vec<String>,
+  /// Encoder configuration.
+  pub encoder: EncoderConfig,
+}
+
+/// Text-to-speech engine with multi-threading support backed by libuv.
 #[napi]
 pub struct AltJTalk(AltJtalkWorker);
 
 // separate `impl` block because rust-analyzer fails to expand `#[napi]` on `impl` block with `#[napi(factory)]`
 #[napi]
 impl AltJTalk {
+  /// Create a new instance of `AltJTalk` with the given configuration.
   #[napi(factory)]
   pub fn from_config(config: AltJTalkConfig) -> napi::Result<Self> {
     Ok(Self(AltJtalkWorker::from_config(config)?))
@@ -34,6 +50,11 @@ impl AltJTalk {
 
 #[napi]
 impl AltJTalk {
+  /// Start synthesis with the given input text and option on the libuv worker thread.
+  ///
+  /// @param inputText Input text to synthesize.
+  /// @param option Synthesis option.
+  /// @param push Callback function to push synthesized frames. The content of the buffer depends on {@link EncoderConfig}.
   #[napi(
     ts_args_type = "inputText: string, option: SynthesisOption, push: (...args: [err: null, frame: Buffer] | [err: Error, frame: null]) => void"
   )]
@@ -57,15 +78,6 @@ impl AltJTalk {
       push,
     }))
   }
-}
-
-#[napi(object)]
-#[derive(Debug, Clone)]
-pub struct AltJTalkConfig {
-  pub dictionary: String,
-  pub user_dictionary: Option<String>,
-  pub models: Vec<String>,
-  pub encoder: EncoderConfig,
 }
 
 #[derive(Clone)]
