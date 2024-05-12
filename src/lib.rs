@@ -2,7 +2,7 @@
 
 use std::sync::Arc;
 
-use encoder::EncoderConfig;
+use encoder::{Encoder, EncoderConfig};
 use jbonsai::engine::Engine;
 use jpreprocess::{
   DefaultFetcher, JPreprocess, JPreprocessConfig, SystemDictionaryConfig, UserDictionaryConfig,
@@ -130,10 +130,8 @@ impl Task for SynthesizeTask {
       .jbonsai
       .generator(labels)
       .map_err(|err| Error::new(Status::InvalidArg, err))?;
-    let encoder = self
-      .worker
-      .encoder_config
-      .build(&self.worker.jbonsai.condition)?;
+    let mut encoder: Box<dyn Encoder> =
+      Encoder::new(&self.worker.jbonsai.condition, &self.worker.encoder_config)?;
 
     loop {
       let buf = encoder.generate(&mut generator)?;
