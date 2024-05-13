@@ -97,43 +97,6 @@ jobs:
           path: ${{ env.APP_NAME }}.*.node
           if-no-files-found: error
 
-  universal-macOS:
-    name: Build universal macOS binary
-    needs:
-      - build
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
-      - name: Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          check-latest: true
-          cache: pnpm
-      - name: Install dependencies
-        run: pnpm install
-      - name: Download macOS x64 artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: bindings-x86_64-apple-darwin
-          path: artifacts
-      - name: Download macOS arm64 artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: bindings-aarch64-apple-darwin
-          path: artifacts
-      - name: Combine binaries
-        run: pnpm universal
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: bindings-universal-apple-darwin
-          path: ${{ env.APP_NAME }}.*.node
-          if-no-files-found: error
-
   node-package:
     name: Create Node package
     runs-on: ubuntu-latest
@@ -156,7 +119,7 @@ jobs:
     name: Create Release
     permissions:
       contents: write
-    needs: [ build, universal-macOS, node-package ]
+    needs: [ build, node-package ]
     runs-on: ubuntu-latest
     steps:
       - name: Download All Artifacts

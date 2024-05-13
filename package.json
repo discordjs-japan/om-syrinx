@@ -4,12 +4,7 @@
   "main": "index.js",
   "types": "index.d.ts",
   "napi": {
-    "name": "node-altjtalk-binding",
-    "triples": {
-      "additional": [
-        "universal-apple-darwin"
-      ]
-    }
+    "name": "node-altjtalk-binding"
   },
   "repository": {
     "type": "git",
@@ -28,7 +23,6 @@
     "build": "napi build --js false --dts native.d.ts --platform --release",
     "build:debug": "napi build --js false --dts native.d.ts --platform",
     "prepublishOnly": "napi prepublish -t npm",
-    "universal": "napi universal",
     "version": "napi version",
     "postinstall": "node install.mjs"
   },
