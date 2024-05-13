@@ -2,10 +2,6 @@ use jbonsai::{engine::Condition, model::interporation_weight::WeightError};
 
 #[napi(object)]
 pub struct SynthesisOption {
-  /// Frame shift
-  /// Must be integer. 1<=frame_period.
-  pub frame_period: Option<u32>,
-
   /// Frequency warping parameter alpha
   /// 0.0<=all_pass_constant<=1.0.
   pub all_pass_constant: Option<f64>,
@@ -56,9 +52,6 @@ pub struct InterporationWeight {
 
 impl SynthesisOption {
   pub fn apply_to_engine(&self, condition: &mut Condition) -> Result<(), WeightError> {
-    if let Some(fperiod) = self.frame_period {
-      condition.set_fperiod(fperiod as usize);
-    }
     if let Some(alpha) = self.all_pass_constant {
       condition.set_alpha(alpha);
     }

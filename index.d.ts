@@ -37,11 +37,6 @@ export interface EncoderConfig {
 }
 export interface SynthesisOption {
   /**
-   * Frame shift
-   * Must be integer. 1<=frame_period.
-   */
-  framePeriod?: number
-  /**
    * Frequency warping parameter alpha
    * 0.0<=all_pass_constant<=1.0.
    */
