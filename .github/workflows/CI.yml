@@ -16,7 +16,7 @@ jobs:
           - host: macos-latest
             target: x86_64-apple-darwin
             build: |
-              pnpm build
+              pnpm build --target x86_64-apple-darwin
               strip -x *.node
           - host: windows-latest
             build: pnpm build
