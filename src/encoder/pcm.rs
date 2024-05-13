@@ -24,8 +24,9 @@ impl PcmEncoder {
     for i in 0..self.chunk_size {
       generated += generator.generate_step(&mut self.speech[i * fperiod..(i + 1) * fperiod]);
     }
+    self.speech[generated..].fill(0.0);
 
-    self.speech.iter().take(generated).flat_map(|f| {
+    self.speech.iter().flat_map(|f| {
       iter::repeat(f.clamp(i16::MIN as f64, i16::MAX as f64) as i16).take(self.channels as usize)
     })
   }
