@@ -34,14 +34,13 @@ pub struct AltJTalkConfig {
   pub encoder: EncoderConfig,
 }
 
-/// Text-to-speech engine with multi-threading support backed by libuv.
+// no doc comments because this will be wrapped in `index.js`/`index.d.ts`
 #[napi]
 pub struct AltJTalk(AltJtalkWorker);
 
 // separate `impl` block because rust-analyzer fails to expand `#[napi]` on `impl` block with `#[napi(factory)]`
 #[napi]
 impl AltJTalk {
-  /// Create a new instance of `AltJTalk` with the given configuration.
   #[napi(factory)]
   pub fn from_config(config: AltJTalkConfig) -> napi::Result<Self> {
     Ok(Self(AltJtalkWorker::from_config(config)?))
@@ -50,11 +49,6 @@ impl AltJTalk {
 
 #[napi]
 impl AltJTalk {
-  /// Start synthesis with the given input text and option on the libuv worker thread.
-  ///
-  /// @param inputText Input text to synthesize.
-  /// @param option Synthesis option.
-  /// @param push Callback function to push synthesized frames. The content of the buffer depends on {@link EncoderConfig}.
   #[napi(
     ts_args_type = "inputText: string, option: SynthesisOption, push: (...args: [err: null, frame: Buffer] | [err: Error, frame: null]) => void"
   )]

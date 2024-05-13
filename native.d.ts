@@ -131,16 +131,7 @@ export interface AltJTalkConfig {
   /** Encoder configuration. */
   encoder: EncoderConfig
 }
-/** Text-to-speech engine with multi-threading support backed by libuv. */
 export class AltJTalk {
-  /** Create a new instance of `AltJTalk` with the given configuration. */
   static fromConfig(config: AltJTalkConfig): AltJTalk
-  /**
-   * Start synthesis with the given input text and option on the libuv worker thread.
-   *
-   * @param inputText Input text to synthesize.
-   * @param option Synthesis option.
-   * @param push Callback function to push synthesized frames. The content of the buffer depends on {@link EncoderConfig}.
-   */
   synthesize(inputText: string, option: SynthesisOption, push: (...args: [err: null, frame: Buffer] | [err: Error, frame: null]) => void): Promise<unknown>
 }

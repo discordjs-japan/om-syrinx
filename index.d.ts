@@ -18,7 +18,7 @@ export class AltJTalk {
    *
    * @param inputText Input text to synthesize.
    * @param option Synthesis option.
-   * @returns Readable stream of either Raw or PCM audio data.
+   * @returns Readable stream of either Opus (objectMode) or Raw audio data.
    */
   synthesize(inputText: string, option: SynthesisOption): Readable;
 }
