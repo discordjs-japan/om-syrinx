@@ -20,8 +20,8 @@
   },
   "scripts": {
     "artifacts": "napi artifacts",
-    "build": "napi build --js false --dts native.d.ts --platform --release",
-    "build:debug": "napi build --js false --dts native.d.ts --platform",
+    "build": "napi build --js false --dts native.d.ts --no-const-enum --platform --release",
+    "build:debug": "napi build --js false --dts native.d.ts --no-const-enum --platform",
     "prepublishOnly": "napi prepublish -t npm",
     "version": "napi version",
     "postinstall": "node install.js"

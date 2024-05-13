@@ -8,11 +8,8 @@ const {
 } = require(`./native`);
 const { Readable } = require("node:stream");
 
-// @ts-expect-error
 exports.EncoderType = EncoderType;
-// @ts-expect-error
 exports.Channels = Channels;
-// @ts-expect-error
 exports.Application = Application;
 
 class AltJTalkStream extends Readable {
