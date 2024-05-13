@@ -5,9 +5,9 @@ pub enum EncoderType {
   /// Encodes audio data with Opus codec.
   /// One pushed chunk corresponds to one encoded frame.
   Opus,
-  /// Returns raw PCM data.
+  /// Returns raw s16le PCM data.
   /// One pushed chunk size is specified by [`EncoderConfig#chunk_size`].
-  Pcm,
+  Raw,
 }
 
 /// Number of channels for generated audio.
