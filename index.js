@@ -83,7 +83,7 @@ class AltJTalkStream extends Readable {
   }
 }
 
-export class AltJTalk {
+class AltJTalk {
   /**
    *
    * @param {import("./native").AltJTalkConfig} config
