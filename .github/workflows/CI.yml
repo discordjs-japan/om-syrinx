@@ -97,29 +97,11 @@ jobs:
           path: ${{ env.APP_NAME }}.*.node
           if-no-files-found: error
 
-  node-package:
-    name: Create Node package
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Create node package
-        run: |
-          mkdir package
-          cp install.mjs index.js index.d.ts package.json LICENSE README.md package/
-          tar czvf node.tar.gz package
-          rm -r package
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: node-package
-          path: node.tar.gz
-          if-no-files-found: error
-
   create-release:
     name: Create Release
     permissions:
       contents: write
-    needs: [ build, node-package ]
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - name: Download All Artifacts
@@ -141,4 +123,3 @@ jobs:
           prerelease: ${{ steps.check-tag.outputs.prerelease == 'true' }}
           files: |
             **/*.node
-            **/*.tar.gz
