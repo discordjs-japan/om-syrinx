@@ -6,6 +6,9 @@ export type {
   AltJTalkConfig,
 } from "./native";
 
+import type { Readable } from "node:stream";
+import type { AltJTalkConfig, SynthesisOption } from "./native";
+
 /** Text-to-speech engine with multi-threading support backed by libuv. */
 export class AltJTalk {
   /** Create a new instance of `AltJTalk` with the given configuration. */
@@ -17,5 +20,5 @@ export class AltJTalk {
    * @param option Synthesis option.
    * @returns Readable stream of either Raw or PCM audio data.
    */
-  synthesize(inputText: string, option: SynthesisOption): NodeJS.ReadableStream;
+  synthesize(inputText: string, option: SynthesisOption): Readable;
 }
