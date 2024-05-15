@@ -6,6 +6,7 @@ pub struct OpusEncoder {
   channels: Channels,
   pcm_encoder: PcmEncoder,
   opus_encoder: audiopus::coder::Encoder,
+  output: Vec<u8>,
 }
 
 const OPUS_FRAME_SIZE: usize = 20; // ms
@@ -34,6 +35,7 @@ impl Encoder for OpusEncoder {
       .map_err(|err| napi::Error::new(napi::Status::GenericFailure, err))?;
 
     Ok(Self {
+      output: vec![0; pcm_encoder.speech_len() * channels as usize], // TODO: better capacity estimation
       channels,
       pcm_encoder,
       opus_encoder,
@@ -46,14 +48,12 @@ impl Encoder for OpusEncoder {
       return Ok(vec![]);
     }
     pcm.resize(self.pcm_encoder.speech_len() * self.channels as usize, 0);
-    let mut output = vec![0; self.pcm_encoder.speech_len()];
 
     let size = self
       .opus_encoder
-      .encode(&pcm, &mut output)
+      .encode(&pcm, &mut self.output)
       .map_err(|err| napi::Error::new(napi::Status::GenericFailure, err))?;
-    output.truncate(size);
 
-    Ok(output)
+    Ok(self.output[..size].to_vec())
   }
 }
