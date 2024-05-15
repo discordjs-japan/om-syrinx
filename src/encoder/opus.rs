@@ -3,6 +3,7 @@ use jbonsai::{engine::Condition, speech::SpeechGenerator};
 use super::{pcm::PcmEncoder, Application, Channels, Encoder, EncoderConfig, EncoderType};
 
 pub struct OpusEncoder {
+  channels: Channels,
   pcm_encoder: PcmEncoder,
   opus_encoder: audiopus::coder::Encoder,
 }
@@ -33,20 +34,25 @@ impl Encoder for OpusEncoder {
       .map_err(|err| napi::Error::new(napi::Status::GenericFailure, err))?;
 
     Ok(Self {
+      channels,
       pcm_encoder,
       opus_encoder,
     })
   }
 
   fn generate(&mut self, generator: &mut SpeechGenerator) -> napi::Result<Vec<u8>> {
-    let pcm: Vec<_> = self.pcm_encoder.generate_i16(generator).collect();
+    let mut pcm: Vec<_> = self.pcm_encoder.generate_i16(generator).collect();
+    if pcm.is_empty() {
+      return Ok(vec![]);
+    }
+    pcm.resize(self.pcm_encoder.speech_len() * self.channels as usize, 0);
     let mut output = vec![0; self.pcm_encoder.speech_len()];
 
     let size = self
       .opus_encoder
       .encode(&pcm, &mut output)
       .map_err(|err| napi::Error::new(napi::Status::GenericFailure, err))?;
-    output.resize(size, 0);
+    output.truncate(size);
 
     Ok(output)
   }
