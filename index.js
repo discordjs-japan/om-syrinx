@@ -57,22 +57,18 @@ class AltJTalkStream extends Readable {
    * @param {(error?: Error | null) => void} callback
    */
   _construct(callback) {
-    let started = false;
     this._altJTalk
-      .synthesize(this._inputText, this._option, (err, result) => {
-        if (!started) {
-          started = true;
-          callback(err);
-        } else if (err) this.emit("error", err);
-        if (err) return;
-
-        if (this._waiting > 0) {
-          this._waiting--;
-          this.push(result);
-        } else this._cache.push(result);
-      })
-      .then(() => (this._ended = true))
-      .catch(callback);
+      .prepare(this._inputText, this._option)
+      .then((synthesizer) => {
+        callback();
+        this._altJTalk.synthesize(synthesizer, (err, result) => {
+          if (err) return this.emit("error", err);
+          if (this._waiting > 0) {
+            this._waiting--;
+            this.push(result);
+          } else this._cache.push(result);
+        });
+      }, callback);
   }
 
   _read() {
