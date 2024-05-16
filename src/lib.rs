@@ -1,6 +1,6 @@
 #![deny(clippy::all)]
 
-use std::{mem, sync::Arc};
+use std::sync::Arc;
 
 use encoder::{Encoder, EncoderConfig};
 use jbonsai::{engine::Engine, speech::SpeechGenerator};
@@ -8,9 +8,9 @@ use jpreprocess::{
   DefaultFetcher, JPreprocess, JPreprocessConfig, SystemDictionaryConfig, UserDictionaryConfig,
 };
 use napi::{
-  bindgen_prelude::{AsyncTask, External},
+  bindgen_prelude::AsyncTask,
   threadsafe_function::{ErrorStrategy, ThreadsafeFunction, ThreadsafeFunctionCallMode},
-  Env, Error, JsExternal, JsFunction, Status, Task,
+  Env, Error, JsFunction, Status, Task,
 };
 use synthesis_option::SynthesisOption;
 
@@ -45,7 +45,7 @@ impl AltJTalk {
     Ok(Self(AltJtalkWorker::from_config(config)?))
   }
 
-  #[napi(ts_return_type = "Promise<ExternalObject<PreparedSynthesizer>>")]
+  #[napi(ts_return_type = "Promise<PreparedSynthesizer>")]
   pub fn prepare(&self, input_text: String, option: SynthesisOption) -> AsyncTask<PrepareTask> {
     let worker = self.0.clone();
     AsyncTask::new(PrepareTask {
@@ -53,23 +53,6 @@ impl AltJTalk {
       input_text,
       option,
     })
-  }
-
-  #[napi(ts_return_type = "Promise<void>")]
-  pub fn synthesize(
-    &self,
-    synthesizer: External<PreparedSynthesizer>,
-    #[napi(
-      ts_arg_type = "(...args: [err: null, frame: Buffer] | [err: Error, frame: null]) => void"
-    )]
-    push: JsFunction,
-  ) -> napi::Result<AsyncTask<SyntheizeTask>> {
-    let push = push.create_threadsafe_function(0, |ctx| {
-      let buffer = ctx.env.create_buffer_with_data(ctx.value)?;
-      Ok(vec![buffer.into_raw()])
-    })?;
-
-    Ok(AsyncTask::new(SyntheizeTask { synthesizer, push }))
   }
 }
 
@@ -112,7 +95,7 @@ pub struct PrepareTask {
 
 impl Task for PrepareTask {
   type Output = PreparedSynthesizer;
-  type JsValue = JsExternal;
+  type JsValue = PreparedSynthesizer;
 
   fn compute(&mut self) -> napi::Result<Self::Output> {
     self
@@ -135,24 +118,55 @@ impl Task for PrepareTask {
       Encoder::new(&self.worker.jbonsai.condition, &self.worker.encoder_config)?;
 
     Ok(PreparedSynthesizer {
-      generator: Box::new(generator),
-      encoder,
+      generator: Some(Box::new(generator)),
+      encoder: Some(encoder),
     })
   }
 
-  fn resolve(&mut self, env: Env, output: Self::Output) -> napi::Result<Self::JsValue> {
-    env.create_external(output, Some(mem::size_of::<PreparedSynthesizer>() as i64))
+  fn resolve(&mut self, _: Env, output: Self::Output) -> napi::Result<Self::JsValue> {
+    Ok(output)
   }
 }
 
 #[napi]
 pub struct PreparedSynthesizer {
-  generator: Box<SpeechGenerator>,
-  encoder: Box<dyn Encoder>,
+  generator: Option<Box<SpeechGenerator>>,
+  encoder: Option<Box<dyn Encoder>>,
+}
+
+#[napi]
+impl PreparedSynthesizer {
+  #[napi(ts_return_type = "Promise<void>")]
+  pub fn synthesize(
+    &mut self,
+    #[napi(
+      ts_arg_type = "(...args: [err: null, frame: Buffer] | [err: Error, frame: null]) => void"
+    )]
+    push: JsFunction,
+  ) -> napi::Result<AsyncTask<SyntheizeTask>> {
+    let (Some(generator), Some(encoder)) = (self.generator.take(), self.encoder.take()) else {
+      return Err(Error::new(
+        Status::GenericFailure,
+        "Synthesizer is already used".to_owned(),
+      ));
+    };
+
+    let push = push.create_threadsafe_function(0, |ctx| {
+      let buffer = ctx.env.create_buffer_with_data(ctx.value)?;
+      Ok(vec![buffer.into_raw()])
+    })?;
+
+    Ok(AsyncTask::new(SyntheizeTask {
+      generator,
+      encoder,
+      push,
+    }))
+  }
 }
 
 pub struct SyntheizeTask {
-  synthesizer: External<PreparedSynthesizer>,
+  generator: Box<SpeechGenerator>,
+  encoder: Box<dyn Encoder>,
   push: ThreadsafeFunction<Vec<u8>, ErrorStrategy::CalleeHandled>,
 }
 
@@ -161,9 +175,8 @@ impl Task for SyntheizeTask {
   type JsValue = ();
 
   fn compute(&mut self) -> napi::Result<Self::Output> {
-    let PreparedSynthesizer { generator, encoder } = &mut *self.synthesizer;
     loop {
-      let buf = encoder.generate(generator)?;
+      let buf = self.encoder.generate(&mut self.generator)?;
       if buf.is_empty() {
         return Ok(());
       } else {
