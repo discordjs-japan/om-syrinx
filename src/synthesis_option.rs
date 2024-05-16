@@ -1,18 +1,7 @@
-use jbonsai::{
-  engine::Condition,
-  model::interporation_weight::{WeightError, Weights},
-};
+use jbonsai::{engine::Condition, model::interporation_weight::WeightError};
 
 #[napi(object)]
 pub struct SynthesisOption {
-  /// Sampling frequency
-  /// Must be integer. 1<=sampling_frequency.
-  pub sampling_frequency: Option<u32>,
-
-  /// Frame shift
-  /// Must be integer. 1<=frame_period.
-  pub frame_period: Option<u32>,
-
   /// Frequency warping parameter alpha
   /// 0.0<=all_pass_constant<=1.0.
   pub all_pass_constant: Option<f64>,
@@ -63,12 +52,6 @@ pub struct InterporationWeight {
 
 impl SynthesisOption {
   pub fn apply_to_engine(&self, condition: &mut Condition) -> Result<(), WeightError> {
-    if let Some(sampling_frequency) = self.sampling_frequency {
-      condition.set_sampling_frequency(sampling_frequency as usize);
-    }
-    if let Some(fperiod) = self.frame_period {
-      condition.set_fperiod(fperiod as usize);
-    }
     if let Some(alpha) = self.all_pass_constant {
       condition.set_alpha(alpha);
     }
@@ -97,22 +80,18 @@ impl SynthesisOption {
     if let Some(ref weights) = self.interporation_weight {
       let iw = condition.get_interporation_weight_mut();
       if let Some(ref duration) = weights.duration {
-        let duration = Weights::new(duration)?;
         iw.set_duration(duration)?;
       }
       if let Some(ref spectrum) = weights.spectrum {
-        let spectrum = Weights::new(spectrum)?;
-        iw.set_parameter(0, spectrum.clone())?;
+        iw.set_parameter(0, spectrum)?;
         iw.set_gv(0, spectrum)?;
       }
       if let Some(ref log_f0) = weights.log_f0 {
-        let log_f0 = Weights::new(log_f0)?;
-        iw.set_parameter(0, log_f0.clone())?;
+        iw.set_parameter(0, log_f0)?;
         iw.set_gv(0, log_f0)?;
       }
       if let Some(ref lpf) = weights.lpf {
-        let lpf = Weights::new(lpf)?;
-        iw.set_parameter(0, lpf.clone())?;
+        iw.set_parameter(0, lpf)?;
         iw.set_gv(0, lpf)?;
       }
     }
