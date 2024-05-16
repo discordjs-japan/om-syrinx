@@ -26,7 +26,8 @@
     "prepublishOnly": "napi prepublish -t npm",
     "universal": "napi universal",
     "version": "napi version",
-    "postinstall": "node install.mjs"
+    "postinstall": "node install.mjs",
+    "test": "node --test test.js"
   },
   "packageManager": "pnpm@8.12.1"
 }

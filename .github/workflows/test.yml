@@ -1,0 +1,55 @@
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          check-latest: true
+          cache: pnpm
+      - name: Install
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            .cargo-cache
+            target/
+          key: cargo
+      - name: Setup config
+        run: |
+          cat <<EOF > ~/.cargo/config.toml
+          [target.aarch64-unknown-linux-musl]
+          linker = "aarch64-linux-musl-gcc"
+          rustflags = ["-C", "target-feature=-crt-static"]
+          
+          [target.aarch64-unknown-linux-gnu]
+          linker = "aarch64-linux-gnu-gcc"
+          EOF
+        shell: bash
+      - name: Install dependencies
+        run: pnpm install
+      - name: Download assets
+        run: |
+          curl -L https://github.com/jpreprocess/jpreprocess/releases/download/v0.8.1/naist-jdic-jpreprocess.tar.gz | tar zx
+          curl -L https://github.com/icn-lab/htsvoice-tohoku-f01/archive/refs/heads/master.zip | tar zx
+      - name: Build
+        run: pnpm build
+        shell: bash
+      - name: Test
+        run: pnpm test
+        shell: bash
