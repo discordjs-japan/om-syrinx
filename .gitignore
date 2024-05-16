@@ -195,3 +195,6 @@ Cargo.lock
 !.yarn/versions
 
 *.node
+
+naist-jdic/
+htsvoice-tohoku-f01-master/
