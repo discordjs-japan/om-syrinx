@@ -4,7 +4,11 @@ on:
 
 jobs:
   test:
-    runs-on: macos-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node: [18, 20]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v3
@@ -13,7 +17,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ matrix.node }}
           check-latest: true
           cache: pnpm
       - name: Install
@@ -29,24 +33,9 @@ jobs:
             ~/.cargo/git/db/
             .cargo-cache
             target/
-          key: cargo
-      - name: Setup config
-        run: |
-          cat <<EOF > ~/.cargo/config.toml
-          [target.aarch64-unknown-linux-musl]
-          linker = "aarch64-linux-musl-gcc"
-          rustflags = ["-C", "target-feature=-crt-static"]
-          
-          [target.aarch64-unknown-linux-gnu]
-          linker = "aarch64-linux-gnu-gcc"
-          EOF
-        shell: bash
+          key: cargo-${{ matrix.os }}-${{ matrix.node }}
       - name: Install dependencies
         run: pnpm install
-      - name: Download assets
-        run: |
-          curl -L https://github.com/jpreprocess/jpreprocess/releases/download/v0.8.1/naist-jdic-jpreprocess.tar.gz | tar zx
-          curl -L https://github.com/icn-lab/htsvoice-tohoku-f01/archive/refs/heads/master.zip | tar zx
       - name: Build
         run: pnpm build
         shell: bash
