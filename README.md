@@ -1,4 +1,4 @@
-# node-altjtalk-binding
+# om-syrinx
 
 ## Cross compilation settings
 
