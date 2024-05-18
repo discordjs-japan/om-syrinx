@@ -5,9 +5,10 @@ on:
 jobs:
   test:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node: [18, 20]
+        node: [20, 21]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
