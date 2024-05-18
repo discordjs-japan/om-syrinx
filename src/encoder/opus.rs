@@ -24,7 +24,7 @@ impl Encoder for OpusEncoder {
     let synthesis_per_second = condition.get_sampling_frequency() / condition.get_fperiod();
     let chunk_size = synthesis_per_second * OPUS_FRAME_SIZE / 1000;
     let pcm_config = EncoderConfig {
-      r#type: EncoderType::Pcm,
+      r#type: EncoderType::Raw,
       channels: Some(channels),
       mode: None,
       chunk_size: Some(chunk_size as u32),

@@ -16,7 +16,7 @@ jobs:
           - host: macos-latest
             target: x86_64-apple-darwin
             build: |
-              pnpm build
+              pnpm build --target x86_64-apple-darwin
               strip -x *.node
           - host: windows-latest
             build: pnpm build
@@ -44,12 +44,12 @@ jobs:
     name: stable - ${{ matrix.settings.target }} - node@20
     runs-on: ${{ matrix.settings.host }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
         with:
           version: 8
       - name: Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         if: ${{ !matrix.settings.docker }}
         with:
           node-version: 20
@@ -62,7 +62,7 @@ jobs:
           toolchain: stable
           targets: ${{ matrix.settings.target }}
       - name: Cache cargo
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.cargo/registry/index/
@@ -91,76 +91,21 @@ jobs:
         run: ${{ matrix.settings.build }}
         shell: bash
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: bindings-${{ matrix.settings.target }}
           path: ${{ env.APP_NAME }}.*.node
-          if-no-files-found: error
-
-  universal-macOS:
-    name: Build universal macOS binary
-    needs:
-      - build
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
-      - name: Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          check-latest: true
-          cache: pnpm
-      - name: Install dependencies
-        run: pnpm install
-      - name: Download macOS x64 artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: bindings-x86_64-apple-darwin
-          path: artifacts
-      - name: Download macOS arm64 artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: bindings-aarch64-apple-darwin
-          path: artifacts
-      - name: Combine binaries
-        run: pnpm universal
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: bindings-universal-apple-darwin
-          path: ${{ env.APP_NAME }}.*.node
-          if-no-files-found: error
-
-  node-package:
-    name: Create Node package
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Create node package
-        run: |
-          mkdir package
-          cp install.mjs index.js index.d.ts package.json LICENSE README.md package/
-          tar czvf node.tar.gz package
-          rm -r package
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: node-package
-          path: node.tar.gz
           if-no-files-found: error
 
   create-release:
     name: Create Release
     permissions:
       contents: write
-    needs: [ build, universal-macOS, node-package ]
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - name: Download All Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
       - name: Check Tag
         id: check-tag
         run: |
@@ -178,4 +123,3 @@ jobs:
           prerelease: ${{ steps.check-tag.outputs.prerelease == 'true' }}
           files: |
             **/*.node
-            **/*.tar.gz

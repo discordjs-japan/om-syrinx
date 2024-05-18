@@ -1,5 +1,6 @@
 use jbonsai::{engine::Condition, model::interporation_weight::WeightError};
 
+/// Voice synthesis option.
 #[napi(object)]
 pub struct SynthesisOption {
   /// Frequency warping parameter alpha
@@ -36,8 +37,18 @@ pub struct SynthesisOption {
 
   /// Interporation weights
   pub interporation_weight: Option<InterporationWeight>,
+
+  /// Shorthand for [`SynthesisOption::interporation_weight`].
+  /// Note that this option is ignored if [`SynthesisOption::interporation_weight`] exists.
+  pub voice: Option<u32>,
 }
 
+/// How loaded models are mixed.
+///
+/// All weight array must:
+/// - be same length as loadad models.
+/// - have values between 0.0 and 1.0.
+/// - sum up to 1.0.
 #[napi(object)]
 pub struct InterporationWeight {
   /// Duration
@@ -87,12 +98,28 @@ impl SynthesisOption {
         iw.set_gv(0, spectrum)?;
       }
       if let Some(ref log_f0) = weights.log_f0 {
-        iw.set_parameter(0, log_f0)?;
-        iw.set_gv(0, log_f0)?;
+        iw.set_parameter(1, log_f0)?;
+        iw.set_gv(1, log_f0)?;
       }
       if let Some(ref lpf) = weights.lpf {
-        iw.set_parameter(0, lpf)?;
-        iw.set_gv(0, lpf)?;
+        iw.set_parameter(2, lpf)?;
+        iw.set_gv(2, lpf)?;
+      }
+    } else if let Some(voice) = self.voice {
+      let voice = voice as usize;
+      let nvoices = condition.get_interporation_weight().get_duration().len();
+      if voice >= nvoices {
+        return Err(WeightError::InvalidLength(nvoices, voice));
+      }
+
+      let mut weight = vec![0.0; nvoices];
+      weight[voice] = 1.0;
+
+      let iw = condition.get_interporation_weight_mut();
+      iw.set_duration(&weight)?;
+      for i in 0..2 {
+        iw.set_parameter(i, &weight)?;
+        iw.set_gv(i, &weight)?;
       }
     }
 

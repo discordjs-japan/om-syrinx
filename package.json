@@ -1,32 +1,30 @@
 {
   "name": "node-altjtalk-binding",
   "version": "0.2.1",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "napi": {
-    "name": "node-altjtalk-binding",
-    "triples": {
-      "additional": [
-        "universal-apple-darwin"
-      ]
-    }
+    "name": "node-altjtalk-binding"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/femshima/node-altjtalk-binding.git"
   },
   "license": "MIT",
   "devDependencies": {
     "@napi-rs/cli": "^2.16.3",
-    "@node-rs/helper": "^1.3.3"
+    "@types/node": ">=18"
   },
   "engines": {
     "node": ">= 18"
   },
   "scripts": {
     "artifacts": "napi artifacts",
-    "build": "napi build --platform --release",
-    "build:debug": "napi build --platform",
+    "build": "napi build --js false --dts lib/native.d.ts --no-const-enum --platform --release",
+    "build:debug": "napi build --js false --dts lib/native.d.ts --no-const-enum --platform",
     "prepublishOnly": "napi prepublish -t npm",
-    "universal": "napi universal",
     "version": "napi version",
-    "postinstall": "node install.mjs"
+    "postinstall": "node lib/install.js"
   },
   "packageManager": "pnpm@8.12.1"
 }
