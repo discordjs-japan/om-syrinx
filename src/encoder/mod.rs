@@ -29,7 +29,7 @@ macro_rules! encoder_new {
 
 impl Encoder for Box<dyn Encoder> {
   fn new(condition: &Condition, config: &EncoderConfig) -> napi::Result<Self> {
-    encoder_new!((condition, config), (Opus, OpusEncoder), (Pcm, PcmEncoder))
+    encoder_new!((condition, config), (Opus, OpusEncoder), (Raw, PcmEncoder))
   }
 
   fn generate(&mut self, generator: &mut SpeechGenerator) -> napi::Result<Vec<u8>> {

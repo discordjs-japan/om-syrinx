@@ -3,14 +3,14 @@
 use std::sync::Arc;
 
 use encoder::{Encoder, EncoderConfig};
-use jbonsai::engine::Engine;
+use jbonsai::{engine::Engine, speech::SpeechGenerator};
 use jpreprocess::{
   DefaultFetcher, JPreprocess, JPreprocessConfig, SystemDictionaryConfig, UserDictionaryConfig,
 };
 use napi::{
   bindgen_prelude::AsyncTask,
   threadsafe_function::{ErrorStrategy, ThreadsafeFunction, ThreadsafeFunctionCallMode},
-  Env, Error, JsFunction, JsUndefined, Status, Task,
+  Env, Error, JsFunction, Status, Task,
 };
 use synthesis_option::SynthesisOption;
 
@@ -20,52 +20,40 @@ extern crate napi_derive;
 mod encoder;
 mod synthesis_option;
 
+/// Configuration for `AltJTalk`.
+#[napi(object)]
+#[derive(Debug, Clone)]
+pub struct AltJTalkConfig {
+  /// Dictionary file path.
+  pub dictionary: String,
+  /// User dictionary file path.
+  pub user_dictionary: Option<String>,
+  /// Model file paths.
+  pub models: Vec<String>,
+  /// Encoder configuration.
+  pub encoder: EncoderConfig,
+}
+
+// no doc comments because this will be wrapped in `index.js`/`index.d.ts`
 #[napi]
 pub struct AltJTalk(AltJtalkWorker);
 
-// separate `impl` block because rust-analyzer fails to expand `#[napi]` on `impl` block with `#[napi(factory)]`
 #[napi]
 impl AltJTalk {
   #[napi(factory)]
   pub fn from_config(config: AltJTalkConfig) -> napi::Result<Self> {
     Ok(Self(AltJtalkWorker::from_config(config)?))
   }
-}
 
-#[napi]
-impl AltJTalk {
-  #[napi(
-    ts_args_type = "inputText: string, option: SynthesisOption, push: (...args: [err: null, frame: Buffer] | [err: Error, frame: null]) => void"
-  )]
-  pub fn synthesize(
-    &mut self,
-    input_text: String,
-    option: SynthesisOption,
-    push: JsFunction,
-  ) -> napi::Result<AsyncTask<SynthesizeTask>> {
+  #[napi(ts_return_type = "Promise<PreparedSynthesizer>")]
+  pub fn prepare(&self, input_text: String, option: SynthesisOption) -> AsyncTask<PrepareTask> {
     let worker = self.0.clone();
-
-    let push = push.create_threadsafe_function(0, |ctx| {
-      let buffer = ctx.env.create_buffer_with_data(ctx.value)?;
-      Ok(vec![buffer.into_raw()])
-    })?;
-
-    Ok(AsyncTask::new(SynthesizeTask {
+    AsyncTask::new(PrepareTask {
       worker,
       input_text,
       option,
-      push,
-    }))
+    })
   }
-}
-
-#[napi(object)]
-#[derive(Debug, Clone)]
-pub struct AltJTalkConfig {
-  pub dictionary: String,
-  pub user_dictionary: Option<String>,
-  pub models: Vec<String>,
-  pub encoder: EncoderConfig,
 }
 
 #[derive(Clone)]
@@ -99,16 +87,15 @@ impl AltJtalkWorker {
   }
 }
 
-pub struct SynthesizeTask {
+pub struct PrepareTask {
   worker: AltJtalkWorker,
   input_text: String,
   option: SynthesisOption,
-  push: ThreadsafeFunction<Vec<u8>, ErrorStrategy::CalleeHandled>,
 }
 
-impl Task for SynthesizeTask {
-  type Output = ();
-  type JsValue = JsUndefined;
+impl Task for PrepareTask {
+  type Output = PreparedSynthesizer;
+  type JsValue = PreparedSynthesizer;
 
   fn compute(&mut self) -> napi::Result<Self::Output> {
     self
@@ -121,20 +108,75 @@ impl Task for SynthesizeTask {
       .jpreprocess
       .extract_fullcontext(&self.input_text)
       .map_err(|err| Error::new(Status::InvalidArg, err))?;
-    if labels.len() <= 2 {
-      return Ok(());
-    }
 
-    let mut generator = self
+    let generator = self
       .worker
       .jbonsai
       .generator(labels)
       .map_err(|err| Error::new(Status::InvalidArg, err))?;
-    let mut encoder: Box<dyn Encoder> =
+    let encoder: Box<dyn Encoder> =
       Encoder::new(&self.worker.jbonsai.condition, &self.worker.encoder_config)?;
 
+    Ok(PreparedSynthesizer {
+      generator: Some(Box::new(generator)),
+      encoder: Some(encoder),
+    })
+  }
+
+  fn resolve(&mut self, _: Env, output: Self::Output) -> napi::Result<Self::JsValue> {
+    Ok(output)
+  }
+}
+
+#[napi]
+pub struct PreparedSynthesizer {
+  generator: Option<Box<SpeechGenerator>>,
+  encoder: Option<Box<dyn Encoder>>,
+}
+
+#[napi]
+impl PreparedSynthesizer {
+  #[napi(ts_return_type = "Promise<void>")]
+  pub fn synthesize(
+    &mut self,
+    #[napi(
+      ts_arg_type = "(...args: [err: null, frame: Buffer] | [err: Error, frame: null]) => void"
+    )]
+    push: JsFunction,
+  ) -> napi::Result<AsyncTask<SyntheizeTask>> {
+    let (Some(generator), Some(encoder)) = (self.generator.take(), self.encoder.take()) else {
+      return Err(Error::new(
+        Status::GenericFailure,
+        "Synthesizer is already used".to_owned(),
+      ));
+    };
+
+    let push = push.create_threadsafe_function(0, |ctx| {
+      let buffer = ctx.env.create_buffer_with_data(ctx.value)?;
+      Ok(vec![buffer.into_raw()])
+    })?;
+
+    Ok(AsyncTask::new(SyntheizeTask {
+      generator,
+      encoder,
+      push,
+    }))
+  }
+}
+
+pub struct SyntheizeTask {
+  generator: Box<SpeechGenerator>,
+  encoder: Box<dyn Encoder>,
+  push: ThreadsafeFunction<Vec<u8>, ErrorStrategy::CalleeHandled>,
+}
+
+impl Task for SyntheizeTask {
+  type Output = ();
+  type JsValue = ();
+
+  fn compute(&mut self) -> napi::Result<Self::Output> {
     loop {
-      let buf = encoder.generate(&mut generator)?;
+      let buf = self.encoder.generate(&mut self.generator)?;
       if buf.is_empty() {
         return Ok(());
       } else {
@@ -145,7 +187,11 @@ impl Task for SynthesizeTask {
     }
   }
 
-  fn resolve(&mut self, env: Env, _: Self::Output) -> napi::Result<Self::JsValue> {
-    env.get_undefined()
+  fn resolve(&mut self, _: Env, _: Self::Output) -> napi::Result<Self::JsValue> {
+    Ok(())
+  }
+
+  fn finally(&mut self, env: Env) -> napi::Result<()> {
+    self.push.unref(&env)
   }
 }
