@@ -48,7 +48,7 @@ async function synthesize(altJTalk, inputText, option) {
 }
 
 /**
- * @param {Buffer} buffer
+ * @param {BufferSource} buffer
  * @param {string} checksum
  */
 async function checksum(buffer, checksum) {
@@ -99,6 +99,10 @@ describe("synthesis", () => {
   });
 
   it("should synthesize identical Opus data", async () => {
+    const { OpusDecoder } = await import("opus-decoder");
+    const decoder = new OpusDecoder();
+    await decoder.ready;
+
     const opus = AltJTalk.fromConfig({
       dictionary: path.join(__dirname, "naist-jdic"),
       models: [
@@ -114,15 +118,42 @@ describe("synthesis", () => {
     const bonsai = await synthesize(opus, "盆栽", {});
     assert.strictEqual(bonsai.length, 78);
 
-    await checksum(bonsai[25], "26a34471a9a047f9184494b7063699a3b0bc4771");
-    await checksum(bonsai[50], "961959780d81dc24aea2b2c87f6617d12aabf99c");
-    await checksum(bonsai[75], "b805476147d1da6b9c1eb9ede8a7a607d7accfa8");
+    const bonsaiDecoded = decoder.decodeFrames(bonsai);
+    assert.strictEqual(bonsaiDecoded.sampleRate, 48000);
+    assert.strictEqual(bonsaiDecoded.samplesDecoded, 74880);
+    assert.strictEqual(bonsaiDecoded.channelData.length, 2);
+
+    // Approximate by converting to Int16Array
+    await checksum(
+      new Int16Array(bonsaiDecoded.channelData[0]),
+      "c4a707f5f150cf69ed8f9dd0068075f8ff96b2e7",
+    );
+    await checksum(
+      new Int16Array(bonsaiDecoded.channelData[1]),
+      "c4a707f5f150cf69ed8f9dd0068075f8ff96b2e7",
+    );
+
+    await decoder.reset();
 
     const isBonsai = await synthesize(opus, "これは，盆栽ですか？", {});
     assert.strictEqual(isBonsai.length, 136);
 
-    await checksum(isBonsai[40], "9b93326876d0516d808c8bcafbd03221c2f3fbb7");
-    await checksum(isBonsai[80], "10d56cbc58ba71627418a4305e41c454b623711b");
-    await checksum(isBonsai[120], "b805476147d1da6b9c1eb9ede8a7a607d7accfa8");
+    const isBonsaiDecoded = decoder.decodeFrames(isBonsai);
+    assert.strictEqual(isBonsaiDecoded.sampleRate, 48000);
+    assert.strictEqual(isBonsaiDecoded.samplesDecoded, 130560);
+    assert.strictEqual(isBonsaiDecoded.channelData.length, 2);
+
+    // Approximate by converting to Int16Array
+    await checksum(
+      new Int16Array(isBonsaiDecoded.channelData[0]),
+      "97bca4f1bbcd59e65a14a1c739db895736dd9528",
+    );
+    await checksum(
+      new Int16Array(isBonsaiDecoded.channelData[1]),
+      "97bca4f1bbcd59e65a14a1c739db895736dd9528",
+    );
+
+    await decoder.reset();
+    decoder.free();
   });
 });
