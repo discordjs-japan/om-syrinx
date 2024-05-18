@@ -25,7 +25,7 @@
     "prepublishOnly": "napi prepublish -t npm",
     "version": "napi version",
     "postinstall": "node lib/install.js",
-    "test": "node --test test.js"
+    "test": "node --test test/index.js"
   },
   "packageManager": "pnpm@8.12.1"
 }

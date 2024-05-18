@@ -9,7 +9,7 @@
  */
 
 const { it } = require("node:test");
-const { AltJTalk, EncoderType } = require(".");
+const { AltJTalk, EncoderType } = require("../lib");
 const path = require("path");
 const assert = require("assert");
 
@@ -17,7 +17,7 @@ const assert = require("assert");
  *
  * @param {AltJTalk} altJTalk
  * @param {string} inputText
- * @param {import(".").SynthesisOption} option
+ * @param {import("../lib").SynthesisOption} option
  * @returns {Promise<Buffer[]>}
  */
 async function synthesize(altJTalk, inputText, option) {
