@@ -7,6 +7,7 @@ const zlib = require("node:zlib");
 const fs = require("node:fs");
 const { Readable } = require("node:stream");
 const { pipeline } = require("node:stream/promises");
+const { setTimeout } = require("node:timers/promises");
 const crypto = require("node:crypto");
 const { Syrinx, EncoderType } = require("../lib");
 const tar = require("tar-fs");
@@ -39,12 +40,13 @@ async function fetchAndExtract(url, path) {
  */
 async function synthesize(syrinx, inputText, option) {
   const stream = syrinx.synthesize(inputText, option);
-  return new Promise((resolve, reject) => {
-    const bufs = [];
-    stream.on("data", (d) => bufs.push(d));
-    stream.on("error", (err) => reject(err));
-    stream.on("end", () => resolve(bufs));
-  });
+  /** @type {Buffer[]} */
+  const result = [];
+  for await (const item of stream) {
+    result.push(item);
+    await setTimeout(20);
+  }
+  return result;
 }
 
 /**
