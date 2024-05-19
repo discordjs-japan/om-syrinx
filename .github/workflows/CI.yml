@@ -1,6 +1,6 @@
 name: CI
 env:
-  APP_NAME: node-altjtalk-binding
+  APP_NAME: om-syrinx
 
 on:
   push:

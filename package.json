@@ -1,14 +1,14 @@
 {
-  "name": "node-altjtalk-binding",
+  "name": "om-syrinx",
   "version": "0.3.0-rc0",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "napi": {
-    "name": "node-altjtalk-binding"
+    "name": "om-syrinx"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/femshima/node-altjtalk-binding.git"
+    "url": "git+https://github.com/femshima/om-syrinx.git"
   },
   "license": "MIT",
   "devDependencies": {
