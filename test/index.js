@@ -1,13 +1,14 @@
 // @ts-check
 
 const { it, describe, before } = require("node:test");
-const { AltJTalk, EncoderType } = require("../lib");
 const path = require("node:path");
 const assert = require("node:assert");
 const zlib = require("node:zlib");
 const fs = require("node:fs");
 const { Readable } = require("node:stream");
 const { pipeline } = require("node:stream/promises");
+const crypto = require("node:crypto");
+const { AltJTalk, EncoderType } = require("../lib");
 const tar = require("tar-fs");
 
 /**
