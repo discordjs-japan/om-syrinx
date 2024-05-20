@@ -120,8 +120,8 @@ export interface InterporationWeight {
   /** Stream #2 */
   lpf?: Array<number>
 }
-/** Configuration for `OmSyrinx`. */
-export interface OmSyrinxConfig {
+/** Configuration for `Syrinx`. */
+export interface SyrinxConfig {
   /** Dictionary file path. */
   dictionary: string
   /** User dictionary file path. */
@@ -131,8 +131,8 @@ export interface OmSyrinxConfig {
   /** Encoder configuration. */
   encoder: EncoderConfig
 }
-export class OmSyrinx {
-  static fromConfig(config: OmSyrinxConfig): OmSyrinx
+export class Syrinx {
+  static fromConfig(config: SyrinxConfig): Syrinx
   prepare(inputText: string, option: SynthesisOption): Promise<PreparedSynthesizer>
 }
 export class PreparedSynthesizer {
