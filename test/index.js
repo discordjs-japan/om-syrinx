@@ -8,7 +8,7 @@ const fs = require("node:fs");
 const { Readable } = require("node:stream");
 const { pipeline } = require("node:stream/promises");
 const crypto = require("node:crypto");
-const { AltJTalk, EncoderType } = require("../lib");
+const { OmSyrinx, EncoderType } = require("../lib");
 const tar = require("tar-fs");
 
 /**
@@ -32,14 +32,13 @@ async function fetchAndExtract(url, path) {
 }
 
 /**
- *
- * @param {AltJTalk} altJTalk
+ * @param {OmSyrinx} syrinx
  * @param {string} inputText
  * @param {import("../lib").SynthesisOption} option
  * @returns {Promise<Buffer[]>}
  */
-async function synthesize(altJTalk, inputText, option) {
-  const stream = altJTalk.synthesize(inputText, option);
+async function synthesize(syrinx, inputText, option) {
+  const stream = syrinx.synthesize(inputText, option);
   return new Promise((resolve, reject) => {
     const bufs = [];
     stream.on("data", (d) => bufs.push(d));
@@ -74,7 +73,7 @@ describe("synthesis", () => {
   });
 
   it("should synthesize identical PCM data", async () => {
-    const pcm = AltJTalk.fromConfig({
+    const pcm = OmSyrinx.fromConfig({
       dictionary: path.join(__dirname, "naist-jdic"),
       models: [
         path.join(
@@ -104,7 +103,7 @@ describe("synthesis", () => {
     const decoder = new OpusDecoder();
     await decoder.ready;
 
-    const opus = AltJTalk.fromConfig({
+    const opus = OmSyrinx.fromConfig({
       dictionary: path.join(__dirname, "naist-jdic"),
       models: [
         path.join(
