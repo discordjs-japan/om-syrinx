@@ -20,10 +20,10 @@ extern crate napi_derive;
 mod encoder;
 mod synthesis_option;
 
-/// Configuration for `AltJTalk`.
+/// Configuration for `OmSyrinx`.
 #[napi(object)]
 #[derive(Debug, Clone)]
-pub struct AltJTalkConfig {
+pub struct OmSyrinxConfig {
   /// Dictionary file path.
   pub dictionary: String,
   /// User dictionary file path.
@@ -36,13 +36,13 @@ pub struct AltJTalkConfig {
 
 // no doc comments because this will be wrapped in `index.js`/`index.d.ts`
 #[napi]
-pub struct AltJTalk(AltJtalkWorker);
+pub struct OmSyrinx(OmSyrinxWorker);
 
 #[napi]
-impl AltJTalk {
+impl OmSyrinx {
   #[napi(factory)]
-  pub fn from_config(config: AltJTalkConfig) -> napi::Result<Self> {
-    Ok(Self(AltJtalkWorker::from_config(config)?))
+  pub fn from_config(config: OmSyrinxConfig) -> napi::Result<Self> {
+    Ok(Self(OmSyrinxWorker::from_config(config)?))
   }
 
   #[napi(ts_return_type = "Promise<PreparedSynthesizer>")]
@@ -57,14 +57,14 @@ impl AltJTalk {
 }
 
 #[derive(Clone)]
-struct AltJtalkWorker {
+struct OmSyrinxWorker {
   jpreprocess: Arc<JPreprocess<DefaultFetcher>>,
   jbonsai: Engine,
   encoder_config: EncoderConfig,
 }
 
-impl AltJtalkWorker {
-  fn from_config(config: AltJTalkConfig) -> napi::Result<Self> {
+impl OmSyrinxWorker {
+  fn from_config(config: OmSyrinxConfig) -> napi::Result<Self> {
     let jpreprocess = JPreprocess::from_config(JPreprocessConfig {
       dictionary: SystemDictionaryConfig::File(config.dictionary.into()),
       user_dictionary: config
@@ -88,7 +88,7 @@ impl AltJtalkWorker {
 }
 
 pub struct PrepareTask {
-  worker: AltJtalkWorker,
+  worker: OmSyrinxWorker,
   input_text: String,
   option: SynthesisOption,
 }
