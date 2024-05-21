@@ -120,8 +120,8 @@ export interface InterporationWeight {
   /** Stream #2 */
   lpf?: Array<number>
 }
-/** Configuration for `AltJTalk`. */
-export interface AltJTalkConfig {
+/** Configuration for `Syrinx`. */
+export interface SyrinxConfig {
   /** Dictionary file path. */
   dictionary: string
   /** User dictionary file path. */
@@ -131,8 +131,8 @@ export interface AltJTalkConfig {
   /** Encoder configuration. */
   encoder: EncoderConfig
 }
-export class AltJTalk {
-  static fromConfig(config: AltJTalkConfig): AltJTalk
+export class Syrinx {
+  static fromConfig(config: SyrinxConfig): Syrinx
   prepare(inputText: string, option: SynthesisOption): Promise<PreparedSynthesizer>
 }
 export class PreparedSynthesizer {

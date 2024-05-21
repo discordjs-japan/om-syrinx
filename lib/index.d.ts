@@ -3,16 +3,16 @@ export type {
   EncoderConfig,
   SynthesisOption,
   InterporationWeight,
-  AltJTalkConfig,
+  SyrinxConfig,
 } from "./native";
 
 import type { Readable } from "node:stream";
-import type { AltJTalkConfig, SynthesisOption } from "./native";
+import type { SyrinxConfig, SynthesisOption } from "./native";
 
 /** Text-to-speech engine with multi-threading support backed by libuv. */
-export class AltJTalk {
-  /** Create a new instance of `AltJTalk` with the given configuration. */
-  static fromConfig(config: AltJTalkConfig): AltJTalk;
+export class Syrinx {
+  /** Create a new instance of `Syrinx` with the given configuration. */
+  static fromConfig(config: SyrinxConfig): Syrinx;
   /**
    * Start synthesis with the given input text and option on the libuv worker thread.
    *
