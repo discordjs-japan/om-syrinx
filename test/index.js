@@ -8,7 +8,7 @@ const fs = require("node:fs");
 const { Readable } = require("node:stream");
 const { pipeline } = require("node:stream/promises");
 const crypto = require("node:crypto");
-const { OmSyrinx, EncoderType } = require("../lib");
+const { Syrinx, EncoderType } = require("../lib");
 const tar = require("tar-fs");
 
 /**
@@ -32,7 +32,7 @@ async function fetchAndExtract(url, path) {
 }
 
 /**
- * @param {OmSyrinx} syrinx
+ * @param {Syrinx} syrinx
  * @param {string} inputText
  * @param {import("../lib").SynthesisOption} option
  * @returns {Promise<Buffer[]>}
@@ -73,7 +73,7 @@ describe("synthesis", () => {
   });
 
   it("should synthesize identical PCM data", async () => {
-    const pcm = OmSyrinx.fromConfig({
+    const pcm = Syrinx.fromConfig({
       dictionary: path.join(__dirname, "naist-jdic"),
       models: [
         path.join(
@@ -103,7 +103,7 @@ describe("synthesis", () => {
     const decoder = new OpusDecoder();
     await decoder.ready;
 
-    const opus = OmSyrinx.fromConfig({
+    const opus = Syrinx.fromConfig({
       dictionary: path.join(__dirname, "naist-jdic"),
       models: [
         path.join(
