@@ -2,6 +2,8 @@
 
 om-syrinx（読み方：おーむ・しーりんくす）は，Discordの読み上げボット「[om](https://github.com/discordjs-japan/om)」のために作られた，音声合成ライブラリです．
 
+om-syrinxでは，音声が前から順に合成され，最後まで合成されるのを待たずに出力されます．つまり，音声合成と再生を同時に行うことができます．ここでは，これを「ストリーミング合成」と呼びます．ストリーミング合成により，音声が再生できるまでの時間が短くなるため，テキストチャンネルに投稿されたメッセージをいち早く読み上げることができます．
+
 実際のテキスト処理と音声合成はそれぞれ「[jpreprocess](https://crates.io/crates/jpreprocess)」と「[jbonsai](https://crates.io/crates/jbonsai)」が担っています．このリポジトリはこれらとNode.jsとのバインディングに加え，スレッド管理，バッファリング，opusへのエンコード機能を提供します．
 
 ## インストール
@@ -64,4 +66,4 @@ const resource = createAudioResource(stream, { inputType: StreamType.Opus });
 - `inputText`：合成するテキスト
 - `option`：合成される音声を調整するオプション．詳しくは，`SynthesisOption`を参照してください．
 
-返り値の`stream`は`Readable`で，`encoder`設定の通りにエンコードされた音声データが流れます．合成はメインスレッドとは別のスレッドで行われます．音声は，全体の合成終了を待たず，合成された分から順次取得できます．
+返り値の`stream`は`Readable`で，`encoder`設定の通りにエンコードされた音声データが流れます．合成はメインスレッドとは別のスレッドで行われます．
