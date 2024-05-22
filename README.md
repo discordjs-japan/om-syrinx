@@ -10,15 +10,13 @@ om-syrinxでは，入力全体を一度に処理するのではなく，順番�
 
 ### 準備
 
-npmのプロジェクトがあることを前提とします．
-
 以下の3つの手順を実行してください．
 - ライブラリ本体をインストールする：\
   `npm install github:discordjs-japan/om-syrinx#v0.3.0`を実行してください．
 - jpreprocess用の辞書をダウンロードする：\
-  [jpreprocessの最新のリリース](https://github.com/jpreprocess/jpreprocess/releases/latest)から辞書 (`naist-jdic-jpreprocess.tar.gz`) をダウンロードし，解凍してください．
+  [jpreprocessの最新のリリース](https://github.com/jpreprocess/jpreprocess/releases/latest)から辞書 (`naist-jdic-jpreprocess.tar.gz`) をダウンロードし，`package.json`があるディレクトリに解凍してください．
 - jbonsai用のモデルをダウンロードする：\
-  htsvoice-tohoku-f01 の`master`ブランチ (<https://github.com/icn-lab/htsvoice-tohoku-f01/archive/refs/heads/master.tar.gz>) をダウンロードし解凍してください．
+  htsvoice-tohoku-f01 の`master`ブランチ (<https://github.com/icn-lab/htsvoice-tohoku-f01/archive/refs/heads/master.tar.gz>) をダウンロードし，`package.json`があるディレクトリに解凍してください．
 
 <details>
   <summary>jbonsai用のモデルについて</summary>
