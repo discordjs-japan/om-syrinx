@@ -1,14 +1,17 @@
+name: Test
+env:
+  APP_NAME: om-syrinx
+
 on:
   pull_request:
     branches: [main]
 
 jobs:
-  test:
+  build:
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node: [18, 20, 22]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -16,7 +19,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node }}
+          node-version: 20
           check-latest: true
           cache: pnpm
       - name: Install
@@ -32,12 +35,41 @@ jobs:
             ~/.cargo/git/db/
             .cargo-cache
             target/
-          key: cargo-${{ matrix.os }}-${{ matrix.node }}
+          key: cargo-${{ matrix.os }}
       - name: Install dependencies
         run: pnpm install
       - name: Build
         run: pnpm build
         shell: bash
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-build-${{ matrix.os }}
+          path: ${{ env.APP_NAME }}.*.node
+          if-no-files-found: error
+  test:
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node: [18, 20, 22]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          check-latest: true
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: test-build-${{ matrix.os }}
       - name: Test
         run: pnpm test
         shell: bash
