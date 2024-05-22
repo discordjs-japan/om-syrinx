@@ -65,17 +65,3 @@ const resource = createAudioResource(stream, { inputType: StreamType.Opus });
 - `option`：合成される音声を調整するオプション．詳しくは，`SynthesisOption`を参照してください．
 
 返り値の`stream`は`Readable`で，`encoder`設定の通りにエンコードされた音声データが流れます．合成はメインスレッドとは別のスレッドで行われます．また，音声は合成された分から合成終了を待たずに取得できます．
-
-## Cross compilation settings
-
-To avoid linker error, write the following to your `~/.cargo/config.toml`
-(if your native environment is `x86_64-unknown-linux-gnu`).
-
-```toml
-[target.aarch64-unknown-linux-musl]
-linker = "aarch64-linux-musl-gcc"
-rustflags = ["-C", "target-feature=-crt-static"]
-
-[target.aarch64-unknown-linux-gnu]
-linker = "aarch64-linux-gnu-gcc"
-```
