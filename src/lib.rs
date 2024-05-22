@@ -17,6 +17,11 @@ use synthesis_option::SynthesisOption;
 #[macro_use]
 extern crate napi_derive;
 
+#[napi]
+pub const JPREPROCESS_VERSION: &str = env!("JPREPROCESS_VERSION");
+#[napi]
+pub const JBONSAI_VERSION: &str = env!("JBONSAI_VERSION");
+
 mod encoder;
 mod synthesis_option;
 

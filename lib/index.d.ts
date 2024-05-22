@@ -1,4 +1,10 @@
-export { EncoderType, Channels, Application } from "./native";
+export {
+  JPREPROCESS_VERSION,
+  JBONSAI_VERSION,
+  EncoderType,
+  Channels,
+  Application,
+} from "./native";
 export type {
   EncoderConfig,
   SynthesisOption,
