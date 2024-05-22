@@ -63,7 +63,7 @@ const resource = createAudioResource(stream, { inputType: StreamType.Opus });
 
 音声を合成する際に渡す引数は以下の通りです：
 - `inputText`：合成するテキスト
-- `option`：合成される音声を調整するオプション．詳しくは，`SnthesisOption`を参照してください．
+- `option`：合成される音声を調整するオプション．詳しくは，`SynthesisOption`を参照してください．
 
 返り値の`stream`は`Readable`で，`encoder`設定の通りにエンコードされた音声データが流れます．合成はメインスレッドとは別のスレッドで行われます．また，音声は合成された分から合成終了を待たずに取得できます．
 
