@@ -17,6 +17,7 @@ audiopus = "=0.3.0-rc.0"
 
 [build-dependencies]
 napi-build = "2.0.1"
+cargo-lock = "9.0.0"
 
 [profile.release]
 lto = true

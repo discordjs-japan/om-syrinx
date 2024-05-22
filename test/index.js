@@ -9,8 +9,46 @@ const { Readable } = require("node:stream");
 const { pipeline } = require("node:stream/promises");
 const { setTimeout } = require("node:timers/promises");
 const crypto = require("node:crypto");
-const { Syrinx, EncoderType } = require("../lib");
+const {
+  JPREPROCESS_VERSION,
+  JBONSAI_VERSION,
+  Syrinx,
+  EncoderType,
+} = require("../lib");
 const tar = require("tar-fs");
+const TOML = require("@iarna/toml");
+
+describe("version", () => {
+  const lockFile = fs.readFileSync("Cargo.lock", "utf-8");
+  const { package } = TOML.parse(lockFile);
+
+  assert(Array.isArray(package));
+  assert(
+    package.every(
+      /** @returns {p is { name: string; version: string }} */
+      (p) =>
+        typeof p === "object" &&
+        !!p &&
+        "name" in p &&
+        typeof p.name === "string" &&
+        "version" in p &&
+        typeof p.version === "string",
+    ),
+  );
+
+  const jpreprocess = package.find((p) => p.name === "jpreprocess");
+  assert(jpreprocess);
+  const jbonsai = package.find((p) => p.name === "jbonsai");
+  assert(jbonsai);
+
+  it("should match the version of jpreprocess", () => {
+    assert.strictEqual(JPREPROCESS_VERSION, jpreprocess.version);
+  });
+
+  it("should match the version of jbonsai", () => {
+    assert.strictEqual(JBONSAI_VERSION, jbonsai.version);
+  });
+});
 
 /**
  *
