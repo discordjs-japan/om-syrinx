@@ -8,7 +8,7 @@ om-syrinx（読み方：おーむ・しーりんくす）は，Discordの読み�
 
 ### ライブラリ本体
 
-以下を実行します：
+以下を実行してください：
 ```sh
 npm install github:discordjs-japan/om-syrinx#v0.3.0
 ```
@@ -16,15 +16,15 @@ npm install github:discordjs-japan/om-syrinx#v0.3.0
 
 ### jpreprocess用の辞書
 
-1.  [`jperprocess`のリリース](https://github.com/jpreprocess/jpreprocess/releases)から最新の辞書 (`naist-jdic-jpreprocess.tar.gz`) をダウンロードします．
-1.  `tar xz`等で展開して，生成される`naist-jdic`フォルダを適切な場所に配置します．
+1.  [`jperprocess`のリリース](https://github.com/jpreprocess/jpreprocess/releases)から最新の辞書 (`naist-jdic-jpreprocess.tar.gz`) をダウンロードしてください．
+1.  `tar xz`等で展開して，生成される`naist-jdic`フォルダを適切な場所に配置してください．
 
 ### jbonsai用のモデル
 
 ここでは，[`htsvoice-tohoku-f01`](https://github.com/icn-lab/htsvoice-tohoku-f01)をダウンロードします．`htsvoice-tohoku-f01`は，4種類の声色のモデルを含むリポジトリです．他のモデルを利用することもできます．
 
-1.  `htsvoice-tohoku-f01`の`master`ブランチ (<https://github.com/icn-lab/htsvoice-tohoku-f01/archive/refs/heads/master.tar.gz>) をダウンロードします．
-1.  `tar xz`等で展開して，生成される`htsvoice-tohoku-f01-master`フォルダを適切な場所に配置します．
+1.  `htsvoice-tohoku-f01`の`master`ブランチ (<https://github.com/icn-lab/htsvoice-tohoku-f01/archive/refs/heads/master.tar.gz>) をダウンロードしてください．
+1.  `tar xz`等で展開して，生成される`htsvoice-tohoku-f01-master`フォルダを適切な場所に配置してください．
 
 ## 使い方
 
