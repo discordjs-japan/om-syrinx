@@ -4,7 +4,7 @@ om-syrinx（読み方：おーむ・しーりんくす）は，Discordの読み�
 
 om-syrinxでは，音声が前から順に合成され，最後まで合成されるのを待たずに出力されます．つまり，音声合成と再生を同時に行うことができます．ここでは，これを「ストリーミング合成」と呼びます．ストリーミング合成により，音声が再生できるまでの時間が短くなるため，テキストチャンネルに投稿されたメッセージをいち早く読み上げることができます．
 
-実際のテキスト処理と音声合成はそれぞれ「[jpreprocess](https://crates.io/crates/jpreprocess)」と「[jbonsai](https://crates.io/crates/jbonsai)」が担っています．このリポジトリはこれらとNode.jsとのバインディングに加え，スレッド管理，バッファリング，opusへのエンコード機能を提供します．
+実際のテキスト処理と音声合成はそれぞれ「[jpreprocess](https://crates.io/crates/jpreprocess)」と「[jbonsai](https://crates.io/crates/jbonsai)」が担っています．om-syrinxはこれらとNode.jsとのバインディングに加え，スレッド管理，バッファリング，opusへのエンコード機能を提供します．
 
 ## インストール
 
