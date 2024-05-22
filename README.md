@@ -6,28 +6,28 @@ om-syrinxでは，入力全体を一度に処理するのではなく，順番�
 
 実際のテキスト処理と音声合成はそれぞれ「[jpreprocess](https://crates.io/crates/jpreprocess)」と「[jbonsai](https://crates.io/crates/jbonsai)」が担っています．om-syrinxはこれらとNode.jsとのバインディングに加え，スレッド管理，バッファリング，opusへのエンコード機能を提供します．
 
-## インストール
+## クイックスタート
 
-### ライブラリ本体
+### 準備
 
-以下を実行してください：
-```sh
-npm install github:discordjs-japan/om-syrinx#v0.3.0
-```
+npmのプロジェクトがあることを前提とします．
 
-### jpreprocess用の辞書
+以下の3つの手順を実行してください．
+- ライブラリ本体をインストールする：\
+  `npm install github:discordjs-japan/om-syrinx#v0.3.0`を実行してください．
+- jpreprocess用の辞書をダウンロードする：\
+  [jpreprocessの最新のリリース](https://github.com/jpreprocess/jpreprocess/releases/latest)から辞書 (`naist-jdic-jpreprocess.tar.gz`) をダウンロードし，解凍してください．
+- jbonsai用のモデルをダウンロードする：\
+  htsvoice-tohoku-f01 の`master`ブランチ (<https://github.com/icn-lab/htsvoice-tohoku-f01/archive/refs/heads/master.tar.gz>) をダウンロードし解凍してください．
 
-[jpreprocessの最新のリリース](https://github.com/jpreprocess/jpreprocess/releases/latest)から辞書 (`naist-jdic-jpreprocess.tar.gz`) をダウンロードして解凍してください．
+<details>
+  <summary>jbonsai用のモデルについて</summary>
 
-### jbonsai用のモデル
+  jbonsaiは，[HTS Engine](https://hts-engine.sourceforge.net)でも用いられる`.htsvoice`モデルを使用して音声を合成します．\
+  ここでは例として，[htsvoice-tohoku-f01](https://github.com/icn-lab/htsvoice-tohoku-f01) を使用しました．htsvoice-tohoku-f01 は，4つの`.htsvoice`モデルを含むリポジトリです．他の`.htsvoice`モデルを使用することもできます．
+</details>
 
-jbonsaiは，[HTS Engine](https://hts-engine.sourceforge.net)でも用いられる`.htsvoice`モデルを使用して音声を合成します．
-ここでは例として，[`htsvoice-tohoku-f01`](https://github.com/icn-lab/htsvoice-tohoku-f01)を使用します．`htsvoice-tohoku-f01`は，4つの`.htsvoice`モデルを含むリポジトリです．他の`.htsvoice`モデルを使用することもできます．
-
-1.  `htsvoice-tohoku-f01`の`master`ブランチ (<https://github.com/icn-lab/htsvoice-tohoku-f01/archive/refs/heads/master.tar.gz>) をダウンロードしてください．
-1.  `tar xz`等で展開して，生成される`htsvoice-tohoku-f01-master`フォルダを適切な場所に配置してください．
-
-## 使い方
+### 使い方
 
 ここでは，`inputText`から`stream`を生成する例を示します．
 
