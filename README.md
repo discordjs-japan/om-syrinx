@@ -8,12 +8,11 @@ om-syrinx（読み方：おーむ・しーりんくす）は，Discordの読み�
 
 ### ライブラリ本体
 
-1.  `package.json`の`dependencies`に以下を追加します：
-    ```
-    "@discordjs-japan/om-syrinx": "github:discordjs-japan/om-syrinx#v0.3.0"
-    ```
-    ただし，バージョンは適宜変更してください．
-2.  `npm install`を実行します．
+以下を実行します：
+```sh
+npm install github:discordjs-japan/om-syrinx#v0.3.0
+```
+ただし，バージョンは適宜変更してください．
 
 ### jpreprocess用の辞書
 
