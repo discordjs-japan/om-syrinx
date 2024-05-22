@@ -64,4 +64,4 @@ const resource = createAudioResource(stream, { inputType: StreamType.Opus });
 - `inputText`：合成するテキスト
 - `option`：合成される音声を調整するオプション．詳しくは，`SynthesisOption`を参照してください．
 
-返り値の`stream`は`Readable`で，`encoder`設定の通りにエンコードされた音声データが流れます．合成はメインスレッドとは別のスレッドで行われます．また，音声は合成された分から合成終了を待たずに取得できます．
+返り値の`stream`は`Readable`で，`encoder`設定の通りにエンコードされた音声データが流れます．合成はメインスレッドとは別のスレッドで行われます．音声は，全体の合成終了を待たず，合成された分から順次取得できます．
