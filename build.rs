@@ -1,6 +1,3 @@
-extern crate cargo_lock;
-extern crate napi_build;
-
 use cargo_lock::Lockfile;
 use std::collections::HashMap;
 
