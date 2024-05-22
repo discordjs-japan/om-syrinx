@@ -23,7 +23,7 @@ npm install github:discordjs-japan/om-syrinx#v0.3.0
 
 ### jbonsai用のモデル
 
-ここでは，[`htsvoice-tohoku-f01`](https://github.com/icn-lab/htsvoice-tohoku-f01)をダウンロードします．`htsvoice-tohoku-f01`は，4種類の声色のモデルを含むリポジトリです．他のモデルを利用することもできます．
+ここでは例として，[`htsvoice-tohoku-f01`](https://github.com/icn-lab/htsvoice-tohoku-f01)を使用します．`htsvoice-tohoku-f01`は，4種類の声色のモデルを含むリポジトリです．他のモデルを利用することもできます．
 
 1.  `htsvoice-tohoku-f01`の`master`ブランチ (<https://github.com/icn-lab/htsvoice-tohoku-f01/archive/refs/heads/master.tar.gz>) をダウンロードしてください．
 1.  `tar xz`等で展開して，生成される`htsvoice-tohoku-f01-master`フォルダを適切な場所に配置してください．
