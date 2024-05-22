@@ -54,17 +54,21 @@ import { createAudioResource, StreamType } from "@discordjs/voice";
 const resource = createAudioResource(stream, { inputType: StreamType.Opus });
 ```
 
-インスタンスを生成する際に必須の設定は以下の通りです：
+`Syrinx.fromConfig()`でインスタンスを生成する際に必須の設定は以下の通りです：
 - `dictionary`：[`jpreprocess`用の辞書](#jpreprocess用の辞書)のフォルダのパス
 - `models`：[`jbonsai`用のモデル](#jbonsai用のモデル)の`.htsvoice`ファイルのパスの配列
-- `encoder`：エンコード設定．エンコードは，`@discordjs/voice`の`createAudioResource`に渡すことを想定して行われています．
-  - `EncoderType.Opus`の場合，オブジェクトモードで，1つのオブジェクトが1つのOpusフレームに対応します．`@discordjs/voice`の`StreamType.Opus`に対応します．
-  - `EncoderType.Raw`の場合，16ビットPCMデータが流れます．`@discordjs/voice`の`StreamType.Raw`に対応します．
+- `encoder`：エンコード設定
+  - `EncoderType.Opus`の場合，Opusでエンコードされます．`@discordjs/voice`の`StreamType.Opus`に対応します．
+  - `EncoderType.Raw`の場合，16ビットPCMに変換されます．`@discordjs/voice`の`StreamType.Raw`に対応します．
   
   その他の設定については，`EncoderConfig`を参照してください．
 
-音声を合成する際に渡す引数は以下の通りです：
+`syrinx.synthesize()`で音声を合成する際に渡す引数は以下の通りです：
 - `inputText`：合成するテキスト
 - `option`：合成される音声を調整するオプション．詳しくは，`SynthesisOption`を参照してください．
 
-返り値の`stream`は`Readable`で，`encoder`設定の通りにエンコードされた音声データが流れます．合成はメインスレッドとは別のスレッドで行われます．
+返り値の`stream`は`Readable`で，`encoder`設定の通りにエンコードされた音声データが流れます．
+- `encoder.type`が`EncoderType.Opus`の場合，`stream`は object mode の`Readable`で，1つのオブジェクトが1つのOpusフレームに対応します．
+- `encoder.type`が`EncoderType.Raw`の場合，`stream`は通常 (non-object mode) の`Readable`で，16ビットPCMのデータが流れます．
+
+合成はメインスレッドとは別のスレッドで行われます．メインスレッドは出力を非同期に受け取ります．
