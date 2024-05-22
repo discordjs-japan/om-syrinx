@@ -17,8 +17,7 @@ npm install github:discordjs-japan/om-syrinx#v0.3.0
 
 ### jpreprocess用の辞書
 
-1.  [`jperprocess`のリリース](https://github.com/jpreprocess/jpreprocess/releases)から最新の辞書 (`naist-jdic-jpreprocess.tar.gz`) をダウンロードしてください．
-1.  `tar xz`等で展開して，生成される`naist-jdic`フォルダを適切な場所に配置してください．
+[jpreprocessの最新のリリース](https://github.com/jpreprocess/jpreprocess/releases/latest)から辞書 (`naist-jdic-jpreprocess.tar.gz`) をダウンロードして解凍してください．
 
 ### jbonsai用のモデル
 
