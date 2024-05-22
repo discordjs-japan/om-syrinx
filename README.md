@@ -22,7 +22,7 @@ om-syrinx（読み方：おーむ・しーりんくす）は，Discordの読み�
 
 ### jbonsai用のモデル
 
-ここでは，[`htsvoice-tohoku-f01`](https://github.com/icn-lab/htsvoice-tohoku-f01)をダウンロードします．`htsvoice-tohoku-f01`は，4種類の声色のモデルを含むレポジトリです．他のモデルを利用することもできます．
+ここでは，[`htsvoice-tohoku-f01`](https://github.com/icn-lab/htsvoice-tohoku-f01)をダウンロードします．`htsvoice-tohoku-f01`は，4種類の声色のモデルを含むリポジトリです．他のモデルを利用することもできます．
 
 1.  `htsvoice-tohoku-f01`の`master`ブランチ (<https://github.com/icn-lab/htsvoice-tohoku-f01/archive/refs/heads/master.tar.gz>) をダウンロードします．
 1.  `tar xz`等で展開して，`htsvoice-tohoku-f01-master`フォルダができることを確認します．
