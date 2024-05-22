@@ -53,8 +53,8 @@ const resource = createAudioResource(stream, { inputType: StreamType.Opus });
 ```
 
 `Syrinx.fromConfig()`でインスタンスを生成する際に必須の設定は以下の通りです：
-- `dictionary`：[`jpreprocess`用の辞書](#jpreprocess用の辞書)のフォルダのパス
-- `models`：[`jbonsai`用のモデル](#jbonsai用のモデル)の`.htsvoice`ファイルのパスの配列
+- `dictionary`：[jpreprocess用の辞書](#jpreprocess用の辞書)のフォルダのパス
+- `models`：[jbonsai用のモデル](#jbonsai用のモデル)の`.htsvoice`ファイルのパスの配列
 - `encoder`：エンコード設定
   - `EncoderType.Opus`の場合，Opusでエンコードされます．`@discordjs/voice`の`StreamType.Opus`に対応します．
   - `EncoderType.Raw`の場合，16ビットPCMに変換されます．`@discordjs/voice`の`StreamType.Raw`に対応します．
