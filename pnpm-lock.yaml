@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 devDependencies:
+  '@iarna/toml':
+    specifier: ^2.2.5
+    version: 2.2.5
   '@napi-rs/cli':
     specifier: ^2.16.3
     version: 2.16.3
@@ -22,6 +25,10 @@ packages:
 
   /@eshaz/web-worker@1.2.2:
     resolution: {integrity: sha512-WxXiHFmD9u/owrzempiDlBB1ZYqiLnm9s6aPc8AlFQalq2tKmqdmMr9GXOupDgzXtqnBipj8Un0gkIm7Sjf8mw==}
+    dev: true
+
+  /@iarna/toml@2.2.5:
+    resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
     dev: true
 
   /@napi-rs/cli@2.16.3:
