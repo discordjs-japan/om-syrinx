@@ -69,7 +69,7 @@ const resource = createAudioResource(stream, { inputType: StreamType.Opus });
 - `option`：合成される音声を調整するオプション．詳しくは，`SynthesisOption`を参照してください．
 
 返り値の`stream`は`Readable`で，`encoder`設定の通りにエンコードされた音声データが流れます．
-- `encoder.type`が`EncoderType.Opus`の場合，`stream`は object mode の`Readable`で，1つのオブジェクトが1つのOpusフレームに対応します．
+- `encoder.type`が`EncoderType.Opus`の場合，`stream`はobject modeの`Readable`で，1つのオブジェクトが1つのOpusフレームに対応します．
 - `encoder.type`が`EncoderType.Raw`の場合，`stream`は通常 (non-object mode) の`Readable`で，16ビットPCMのデータが流れます．
 
 合成はメインスレッドとは別のスレッドで行われます．メインスレッドは出力を非同期に受け取ります．
