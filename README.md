@@ -33,6 +33,7 @@ jbonsaiは，[HTS Engine](https://hts-engine.sourceforge.net)でも用いられ�
 
 ```ts
 import { Syrinx, EncoderType, type SynthesisOption } from "@discordjs-japan/om-syrinx";
+import { Readable } from "node:stream";
 
 // インスタンスを生成
 const syrinx = Syrinx.fromConfig({
@@ -44,7 +45,7 @@ const syrinx = Syrinx.fromConfig({
 // 音声を合成
 const inputText = "鳴管は、鳥類のもつ発声器官。";
 const option: SynthesisOption = {};
-const stream = syrinx.synthesize(inputText, option);
+const stream: Readable = syrinx.synthesize(inputText, option);
 
 // @discordjs/voice で利用
 import { createAudioResource, StreamType } from "@discordjs/voice";
