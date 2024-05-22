@@ -19,14 +19,14 @@ om-syrinxでは，入力全体を一度に処理するのではなく，順番�
   [jpreprocessのリリース](https://github.com/jpreprocess/jpreprocess/releases/v0.8.1)から[辞書 (`naist-jdic-jpreprocess.tar.gz`)](https://github.com/jpreprocess/jpreprocess/releases/download/v0.8.1/naist-jdic-jpreprocess.tar.gz) をダウンロードし，カレントディレクトリに解凍してください．
 - jbonsai用のモデルをダウンロードする：
 
-  htsvoice-tohoku-f01の`master`ブランチ (<https://github.com/icn-lab/htsvoice-tohoku-f01/archive/refs/heads/master.tar.gz>) をダウンロードし，カレントディレクトリに解凍してください．
+  [htsvoice-tohoku-f01](https://github.com/icn-lab/htsvoice-tohoku-f01)の`master`ブランチ (<https://github.com/icn-lab/htsvoice-tohoku-f01/archive/refs/heads/master.tar.gz>) をダウンロードし，カレントディレクトリに解凍してください．
 
 <details>
   <summary>jbonsai用のモデルについて</summary>
 
   jbonsaiは，[HTS Engine](https://hts-engine.sourceforge.net)でも用いられる`.htsvoice`モデルを使用して音声を合成します．
 
-  ここでは例として，[htsvoice-tohoku-f01](https://github.com/icn-lab/htsvoice-tohoku-f01) を使用しました．htsvoice-tohoku-f01は，4つの`.htsvoice`モデルを含むリポジトリです．他の`.htsvoice`モデルを使用することもできます．
+  ここでは例として，htsvoice-tohoku-f01を使用しました．htsvoice-tohoku-f01は，4つの`.htsvoice`モデルを含むリポジトリです．他の`.htsvoice`モデルを使用することもできます．
 </details>
 
 ### 使い方
