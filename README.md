@@ -14,7 +14,6 @@ om-syrinxでは，入力全体を一度に処理するのではなく，順番�
 ```sh
 npm install github:discordjs-japan/om-syrinx#v0.3.0
 ```
-ただし，バージョンは適宜変更してください．
 
 ### jpreprocess用の辞書
 
