@@ -13,7 +13,7 @@ om-syrinxでは，入力全体を一度に処理するのではなく，順番�
 以下の3つの手順を実行してください．
 - ライブラリ本体をインストールする：
 
-  `npm install github:discordjs-japan/om-syrinx#v0.3.0`を実行してください．
+  `npm install github:discordjs-japan/om-syrinx#v0.4.0`を実行してください．
 - jpreprocess用の辞書をダウンロードする：
 
   [jpreprocessのリリース](https://github.com/jpreprocess/jpreprocess/releases/v0.9.1)から[辞書 (`naist-jdic-jpreprocess.tar.gz`)](https://github.com/jpreprocess/jpreprocess/releases/download/v0.9.1/naist-jdic-jpreprocess.tar.gz) をダウンロードし，カレントディレクトリに解凍してください．
