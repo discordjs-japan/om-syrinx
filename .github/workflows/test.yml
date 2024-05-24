@@ -45,7 +45,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-build-${{ matrix.os }}
-          path: ${{ env.APP_NAME }}.*.node
+          path: |
+            ${{ env.APP_NAME }}.*.node
+            Cargo.lock
           if-no-files-found: error
   test:
     needs: build
