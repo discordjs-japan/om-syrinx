@@ -143,7 +143,7 @@ describe("synthesis", () => {
     const decoder = new OpusDecoder();
     await decoder.ready;
 
-    const opus = Syrinx.fromConfig({
+    const opus = await Syrinx.fromConfigAsync({
       dictionary: path.join(__dirname, "naist-jdic"),
       models: [
         path.join(
