@@ -17,8 +17,13 @@ const {
 } = require("../lib");
 const tar = require("tar-fs");
 const TOML = require("@iarna/toml");
+const { OM_SYRINX_VERSION } = require("../lib");
 
 describe("version", () => {
+  it("should match the version of om-syrinx", () => {
+    assert.strictEqual(require("../package.json").version, OM_SYRINX_VERSION);
+  });
+
   const lockFile = fs.readFileSync("Cargo.lock", "utf-8");
   const { package } = TOML.parse(lockFile);
 
