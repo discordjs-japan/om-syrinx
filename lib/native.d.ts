@@ -135,6 +135,7 @@ export interface SyrinxConfig {
 }
 export class Syrinx {
   static fromConfig(config: SyrinxConfig): Syrinx
+  static fromConfigAsync(config: SyrinxConfig): Promise<Syrinx>
   prepare(inputText: string, option: SynthesisOption): Promise<PreparedSynthesizer>
 }
 export class PreparedSynthesizer {

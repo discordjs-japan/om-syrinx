@@ -47,7 +47,12 @@ pub struct Syrinx(SyrinxWorker);
 impl Syrinx {
   #[napi(factory)]
   pub fn from_config(config: SyrinxConfig) -> napi::Result<Self> {
-    Ok(Self(SyrinxWorker::from_config(config)?))
+    Ok(Self(SyrinxWorker::from_config(&config)?))
+  }
+
+  #[napi(ts_return_type = "Promise<Syrinx>")]
+  pub fn from_config_async(config: SyrinxConfig) -> AsyncTask<FromConfigTask> {
+    AsyncTask::new(FromConfigTask { config })
   }
 
   #[napi(ts_return_type = "Promise<PreparedSynthesizer>")]
@@ -69,9 +74,9 @@ struct SyrinxWorker {
 }
 
 impl SyrinxWorker {
-  fn from_config(config: SyrinxConfig) -> napi::Result<Self> {
+  fn from_config(config: &SyrinxConfig) -> napi::Result<Self> {
     let jpreprocess = JPreprocess::from_config(JPreprocessConfig {
-      dictionary: SystemDictionaryConfig::File(config.dictionary.into()),
+      dictionary: SystemDictionaryConfig::File(config.dictionary.clone().into()),
       user_dictionary: config
         .user_dictionary
         .as_ref()
@@ -87,8 +92,25 @@ impl SyrinxWorker {
     Ok(Self {
       jpreprocess: Arc::new(jpreprocess),
       jbonsai,
-      encoder_config: config.encoder,
+      encoder_config: config.encoder.clone(),
     })
+  }
+}
+
+pub struct FromConfigTask {
+  config: SyrinxConfig,
+}
+
+impl Task for FromConfigTask {
+  type Output = Syrinx;
+  type JsValue = Syrinx;
+
+  fn compute(&mut self) -> napi::Result<Self::Output> {
+    Ok(Syrinx(SyrinxWorker::from_config(&self.config)?))
+  }
+
+  fn resolve(&mut self, _: Env, output: Self::Output) -> napi::Result<Self::JsValue> {
+    Ok(output)
   }
 }
 
