@@ -10,6 +10,7 @@ const { pipeline } = require("node:stream/promises");
 const { setTimeout } = require("node:timers/promises");
 const crypto = require("node:crypto");
 const {
+  OM_SYRINX_VERSION,
   JPREPROCESS_VERSION,
   JBONSAI_VERSION,
   Syrinx,
@@ -17,7 +18,6 @@ const {
 } = require("../lib");
 const tar = require("tar-fs");
 const TOML = require("@iarna/toml");
-const { OM_SYRINX_VERSION } = require("../lib");
 
 describe("version", () => {
   it("should match the version of om-syrinx", () => {
