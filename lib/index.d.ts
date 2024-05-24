@@ -12,6 +12,8 @@ export type {
   SyrinxConfig,
 } from "./native";
 
+export const OM_SYRINX_VERSION: string;
+
 import type { Readable } from "node:stream";
 import type { SyrinxConfig, SynthesisOption } from "./native";
 

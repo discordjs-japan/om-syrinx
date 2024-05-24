@@ -10,6 +10,7 @@ const { pipeline } = require("node:stream/promises");
 const { setTimeout } = require("node:timers/promises");
 const crypto = require("node:crypto");
 const {
+  OM_SYRINX_VERSION,
   JPREPROCESS_VERSION,
   JBONSAI_VERSION,
   Syrinx,
@@ -19,6 +20,10 @@ const tar = require("tar-fs");
 const TOML = require("@iarna/toml");
 
 describe("version", () => {
+  it("should match the version of om-syrinx", () => {
+    assert.strictEqual(require("../package.json").version, OM_SYRINX_VERSION);
+  });
+
   const lockFile = fs.readFileSync("Cargo.lock", "utf-8");
   const { package } = TOML.parse(lockFile);
 
