@@ -21,6 +21,8 @@ import type { SyrinxConfig, SynthesisOption } from "./native";
 export class Syrinx {
   /** Create a new instance of `Syrinx` with the given configuration. */
   static fromConfig(config: SyrinxConfig): Syrinx;
+  /** Create a new instance of `Syrinx` (in worker thread) with the given configuration. */
+  static fromConfigAsync(config: SyrinxConfig): Promise<Syrinx>;
   /**
    * Start synthesis with the given input text and option on the libuv worker thread.
    *
