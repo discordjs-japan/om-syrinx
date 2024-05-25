@@ -55,7 +55,7 @@ impl Syrinx {
     AsyncTask::new(FromConfigTask { config })
   }
 
-  #[napi(ts_return_type = "Promise<PreparedSynthesizer>")]
+  #[napi(ts_return_type = "Promise<PreparedSynthesizer | null>")]
   pub fn prepare(&self, input_text: String, option: SynthesisOption) -> AsyncTask<PrepareTask> {
     let worker = self.0.clone();
     AsyncTask::new(PrepareTask {
@@ -121,8 +121,8 @@ pub struct PrepareTask {
 }
 
 impl Task for PrepareTask {
-  type Output = PreparedSynthesizer;
-  type JsValue = PreparedSynthesizer;
+  type Output = Option<PreparedSynthesizer>;
+  type JsValue = Option<PreparedSynthesizer>;
 
   fn compute(&mut self) -> napi::Result<Self::Output> {
     self
@@ -136,6 +136,10 @@ impl Task for PrepareTask {
       .extract_fullcontext(&self.input_text)
       .map_err(|err| Error::new(Status::InvalidArg, err))?;
 
+    if labels.len() <= 2 {
+      return Ok(None);
+    }
+
     let generator = self
       .worker
       .jbonsai
@@ -144,10 +148,10 @@ impl Task for PrepareTask {
     let encoder: Box<dyn Encoder> =
       Encoder::new(&self.worker.jbonsai.condition, &self.worker.encoder_config)?;
 
-    Ok(PreparedSynthesizer {
+    Ok(Some(PreparedSynthesizer {
       generator: Some(Box::new(generator)),
       encoder: Some(encoder),
-    })
+    }))
   }
 
   fn resolve(&mut self, _: Env, output: Self::Output) -> napi::Result<Self::JsValue> {
