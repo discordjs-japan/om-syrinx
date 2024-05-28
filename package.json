@@ -6,6 +6,10 @@
   "napi": {
     "name": "om-syrinx"
   },
+  "files": [
+    "lib",
+    "om-syrinx.*.node"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/discordjs-japan/om-syrinx.git"
