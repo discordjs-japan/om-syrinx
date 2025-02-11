@@ -12,8 +12,8 @@ devDependencies:
     specifier: ^2.16.3
     version: 2.16.3
   '@types/node':
-    specifier: '>=18'
-    version: 20.12.12
+    specifier: 20.17.17
+    version: 20.17.17
   opus-decoder:
     specifier: ^0.7.6
     version: 0.7.6
@@ -37,10 +37,10 @@ packages:
     hasBin: true
     dev: true
 
-  /@types/node@20.12.12:
-    resolution: {integrity: sha512-eWLDGF/FOSPtAvEqeRAQ4C8LSA7M1I7i0ky1I8U7kD1J5ITyW3AsRhQrKVoWf5pFKZ2kILsEGJhsI9r93PYnOw==}
+  /@types/node@20.17.17:
+    resolution: {integrity: sha512-/WndGO4kIfMicEQLTi/mDANUu/iVUhT7KboZPdEqqHQ4aTS+3qT3U5gIqWDFV+XouorjfgGqvKILJeHhuQgFYg==}
     dependencies:
-      undici-types: 5.26.5
+      undici-types: 6.19.8
     dev: true
 
   /@wasm-audio-decoders/common@9.0.5:
@@ -156,8 +156,8 @@ packages:
       streamx: 2.16.1
     dev: true
 
-  /undici-types@5.26.5:
-    resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
+  /undici-types@6.19.8:
+    resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
     dev: true
 
   /wrappy@1.0.2:
