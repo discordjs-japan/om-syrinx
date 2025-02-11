@@ -12,7 +12,7 @@ napi = { version = "2.12.2", default-features = false, features = ["napi4"] }
 napi-derive = "2.12.2"
 
 jpreprocess = "0.9.1"
-jbonsai = "0.1.1"
+jbonsai = "0.2.0"
 audiopus = "=0.3.0-rc.0"
 
 [build-dependencies]
