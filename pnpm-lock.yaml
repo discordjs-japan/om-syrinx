@@ -15,8 +15,8 @@ importers:
         specifier: ^2.16.3
         version: 2.18.4
       '@types/node':
-        specifier: '>=18'
-        version: 22.13.1
+        specifier: 22.13.4
+        version: 22.13.4
       opus-decoder:
         specifier: ^0.7.6
         version: 0.7.7
@@ -37,8 +37,8 @@ packages:
     engines: {node: '>= 10'}
     hasBin: true
 
-  '@types/node@22.13.1':
-    resolution: {integrity: sha512-jK8uzQlrvXqEU91UxiK5J7pKHyzgnI1Qnl0QDHIgVGuolJhRb9EEl28Cj9b3rGR8B2lhFCtvIm5os8lFnO/1Ew==}
+  '@types/node@22.13.4':
+    resolution: {integrity: sha512-ywP2X0DYtX3y08eFVx5fNIw7/uIv8hYUKgXoK8oayJlLnKcRfEYCxWMVE1XagUdVtCJlZT1AU4LXEABW+L1Peg==}
 
   '@wasm-audio-decoders/common@9.0.5':
     resolution: {integrity: sha512-b9JNh9sPAvn8PVIizNh9D60WkfQong/u9ea873H47u7zvVDLctxYIp2aZw9CQqXaQdk7JB3MoU5UHiseO40swg==}
@@ -115,7 +115,7 @@ snapshots:
 
   '@napi-rs/cli@2.18.4': {}
 
-  '@types/node@22.13.1':
+  '@types/node@22.13.4':
     dependencies:
       undici-types: 6.20.0
 
