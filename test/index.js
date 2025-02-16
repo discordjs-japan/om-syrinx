@@ -106,7 +106,7 @@ describe("synthesis", () => {
   before(async () => {
     if (!fs.existsSync(path.join(__dirname, "naist-jdic"))) {
       await fetchAndExtract(
-        "https://github.com/jpreprocess/jpreprocess/releases/download/v0.12.0/naist-jdic-jpreprocess.tar.gz",
+        `https://github.com/jpreprocess/jpreprocess/releases/download/v${JPREPROCESS_VERSION}/naist-jdic-jpreprocess.tar.gz`,
         __dirname,
       );
     }
