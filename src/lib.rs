@@ -4,9 +4,7 @@ use std::sync::Arc;
 
 use encoder::{Encoder, EncoderConfig};
 use jbonsai::{engine::Engine, speech::SpeechGenerator};
-use jpreprocess::{
-  DefaultFetcher, JPreprocess, JPreprocessConfig, SystemDictionaryConfig, UserDictionaryConfig,
-};
+use jpreprocess::{DefaultTokenizer, JPreprocess, JPreprocessConfig, SystemDictionaryConfig};
 use napi::{
   bindgen_prelude::AsyncTask,
   threadsafe_function::{ErrorStrategy, ThreadsafeFunction, ThreadsafeFunctionCallMode},
@@ -68,7 +66,7 @@ impl Syrinx {
 
 #[derive(Clone)]
 struct SyrinxWorker {
-  jpreprocess: Arc<JPreprocess<DefaultFetcher>>,
+  jpreprocess: Arc<JPreprocess<DefaultTokenizer>>,
   jbonsai: Engine,
   encoder_config: EncoderConfig,
 }
@@ -80,10 +78,7 @@ impl SyrinxWorker {
       user_dictionary: config
         .user_dictionary
         .as_ref()
-        .map(|path| UserDictionaryConfig {
-          path: path.into(),
-          kind: None,
-        }),
+        .map(|path| serde_json::json!({ "path": path })),
     })
     .map_err(|err| Error::new(Status::InvalidArg, err))?;
     let jbonsai =
