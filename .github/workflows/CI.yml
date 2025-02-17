@@ -32,9 +32,8 @@ jobs:
               set -e &&
               pnpm build --target x86_64-unknown-linux-gnu &&
               strip *.node
-          - host: ubuntu-latest
+          - host: ubuntu-24.04-arm
             target: aarch64-unknown-linux-gnu
-            cross: gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
             build: |-
               pnpm build --target aarch64-unknown-linux-gnu
               aarch64-linux-gnu-strip *.node
@@ -80,9 +79,6 @@ jobs:
           linker = "aarch64-linux-gnu-gcc"
           EOF
         shell: bash
-      - name: Setup cross compiler
-        if: ${{ matrix.settings.cross }}
-        run: sudo apt-get update && sudo apt-get install -y ${{ matrix.settings.cross }}
       - name: Install dependencies
         run: pnpm install
       - name: Build
