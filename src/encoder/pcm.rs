@@ -2,6 +2,8 @@ use std::iter;
 
 use jbonsai::{engine::Condition, speech::SpeechGenerator};
 
+use crate::error::SyrinxResult;
+
 use super::{Channels, Encoder, EncoderConfig};
 
 pub(super) struct PcmEncoder {
@@ -32,7 +34,7 @@ impl PcmEncoder {
 }
 
 impl Encoder for PcmEncoder {
-  fn new(condition: &Condition, config: &EncoderConfig) -> napi::Result<Self> {
+  fn new(condition: &Condition, config: &EncoderConfig) -> SyrinxResult<Self> {
     let channels = config.channels.unwrap_or(Channels::Stereo);
     let chunk_size = config.chunk_size.unwrap_or(4) as usize;
     let speech = vec![0.0; condition.get_fperiod() * chunk_size];
@@ -43,7 +45,7 @@ impl Encoder for PcmEncoder {
     })
   }
 
-  fn generate(&mut self, generator: &mut SpeechGenerator) -> napi::Result<Vec<u8>> {
+  fn generate(&mut self, generator: &mut SpeechGenerator) -> SyrinxResult<Vec<u8>> {
     let result = self
       .generate_i16(generator)
       .flat_map(|i| i.to_le_bytes())

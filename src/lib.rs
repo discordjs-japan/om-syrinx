@@ -3,6 +3,7 @@
 use std::sync::Arc;
 
 use encoder::{Encoder, EncoderConfig};
+use error::SyrinxResult;
 use jbonsai::{engine::Engine, speech::SpeechGenerator};
 use jpreprocess::{DefaultTokenizer, JPreprocess, JPreprocessConfig, SystemDictionaryConfig};
 use napi::{
@@ -21,6 +22,7 @@ pub const JPREPROCESS_VERSION: &str = env!("JPREPROCESS_VERSION");
 pub const JBONSAI_VERSION: &str = env!("JBONSAI_VERSION");
 
 mod encoder;
+mod error;
 mod synthesis_option;
 
 /// Configuration for `Syrinx`.
@@ -72,17 +74,15 @@ struct SyrinxWorker {
 }
 
 impl SyrinxWorker {
-  fn from_config(config: &SyrinxConfig) -> napi::Result<Self> {
+  fn from_config(config: &SyrinxConfig) -> SyrinxResult<Self> {
     let jpreprocess = JPreprocess::from_config(JPreprocessConfig {
       dictionary: SystemDictionaryConfig::File(config.dictionary.clone().into()),
       user_dictionary: config
         .user_dictionary
         .as_ref()
         .map(|path| serde_json::json!({ "path": path })),
-    })
-    .map_err(|err| Error::new(Status::InvalidArg, err))?;
-    let jbonsai =
-      Engine::load(&config.models).map_err(|err| Error::new(Status::InvalidArg, err))?;
+    })?;
+    let jbonsai = Engine::load(&config.models)?;
 
     Ok(Self {
       jpreprocess: Arc::new(jpreprocess),
@@ -115,27 +115,18 @@ pub struct PrepareTask {
   option: SynthesisOption,
 }
 
-impl Task for PrepareTask {
-  type Output = PreparedSynthesizer;
-  type JsValue = PreparedSynthesizer;
-
-  fn compute(&mut self) -> napi::Result<Self::Output> {
+impl PrepareTask {
+  fn prepare(&mut self) -> SyrinxResult<PreparedSynthesizer> {
     self
       .option
-      .apply_to_engine(&mut self.worker.jbonsai.condition)
-      .map_err(|err| Error::new(Status::InvalidArg, err))?;
+      .apply_to_engine(&mut self.worker.jbonsai.condition)?;
 
     let labels = self
       .worker
       .jpreprocess
-      .extract_fullcontext(&self.input_text)
-      .map_err(|err| Error::new(Status::InvalidArg, err))?;
+      .extract_fullcontext(&self.input_text)?;
 
-    let generator = self
-      .worker
-      .jbonsai
-      .generator(labels)
-      .map_err(|err| Error::new(Status::InvalidArg, err))?;
+    let generator = self.worker.jbonsai.generator(labels)?;
     let encoder: Box<dyn Encoder> =
       Encoder::new(&self.worker.jbonsai.condition, &self.worker.encoder_config)?;
 
@@ -143,6 +134,15 @@ impl Task for PrepareTask {
       generator: Some(Box::new(generator)),
       encoder: Some(encoder),
     })
+  }
+}
+
+impl Task for PrepareTask {
+  type Output = PreparedSynthesizer;
+  type JsValue = PreparedSynthesizer;
+
+  fn compute(&mut self) -> napi::Result<Self::Output> {
+    Ok(self.prepare()?)
   }
 
   fn resolve(&mut self, _: Env, output: Self::Output) -> napi::Result<Self::JsValue> {
