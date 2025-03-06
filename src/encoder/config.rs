@@ -10,6 +10,15 @@ pub enum EncoderType {
   Raw,
 }
 
+impl EncoderType {
+  pub fn object_mode(&self) -> bool {
+    match self {
+      Self::Opus => true,
+      Self::Raw => false,
+    }
+  }
+}
+
 /// Number of channels for generated audio.
 #[napi]
 #[derive(Debug, PartialEq, Eq)]
