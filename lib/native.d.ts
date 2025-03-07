@@ -136,8 +136,10 @@ export interface SyrinxConfig {
 export class Syrinx {
   static fromConfig(config: SyrinxConfig): Syrinx
   static fromConfigAsync(config: SyrinxConfig): Promise<Syrinx>
-  prepare(inputText: string, option: SynthesisOption): Promise<PreparedSynthesizer>
+  objectMode(): boolean
+  synthesize(inputText: string, option: SynthesisOption): SyrinxStream
 }
-export class PreparedSynthesizer {
-  synthesize(push: (...args: [err: null, frame: Buffer] | [err: Error, frame: null]) => void): Promise<void>
+export class SyrinxStream {
+  construct(): Promise<null>
+  read(): Promise<Buffer | null>
 }
