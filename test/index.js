@@ -17,7 +17,7 @@ const {
   EncoderType,
 } = require("../lib");
 const tar = require("tar-fs");
-const TOML = require("@iarna/toml");
+const TOML = require("smol-toml");
 
 describe("version", () => {
   it("should match the version of om-syrinx", () => {
