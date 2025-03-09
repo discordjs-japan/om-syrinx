@@ -2,11 +2,10 @@ use std::sync::Arc;
 
 use jbonsai::{engine::Engine, speech::SpeechGenerator};
 use jpreprocess::{DefaultTokenizer, JPreprocess, JPreprocessConfig, SystemDictionaryConfig};
-use napi::tokio::sync::{mpsc, oneshot};
 
 use crate::{
   encoder::{Encoder, EncoderConfig},
-  error::{SyrinxError, SyrinxResult},
+  error::SyrinxResult,
   synthesis_option::SynthesisOption,
   SyrinxConfig,
 };
@@ -40,7 +39,7 @@ impl SyrinxWorker {
     self.encoder_config.r#type.object_mode()
   }
 
-  fn construct(
+  pub fn prepare(
     &mut self,
     input_text: &str,
     option: &SynthesisOption,
@@ -53,44 +52,5 @@ impl SyrinxWorker {
     let encoder = Encoder::new(&self.jbonsai.condition, &self.encoder_config)?;
 
     Ok((generator, encoder))
-  }
-
-  pub fn synthesize(
-    &mut self,
-    input_text: &str,
-    option: &SynthesisOption,
-    construct: &mut Option<oneshot::Sender<SyrinxResult<()>>>,
-    read: &mpsc::Sender<SyrinxResult<Vec<u8>>>,
-  ) -> SyrinxResult<()> {
-    let construct = construct.take().ok_or(SyrinxError::AlreadyConstructed)?;
-    let (mut generator, mut encoder) = match self.construct(input_text, option) {
-      Ok(ret) => {
-        construct
-          .send(Ok(()))
-          .map_err(|_| SyrinxError::PeerDropped("SyrinxStreamReceiver"))?;
-        ret
-      }
-      Err(e) => {
-        construct
-          .send(Err(e))
-          .map_err(|_| SyrinxError::PeerDropped("SyrinxStreamReceiver"))?;
-        return Err(SyrinxError::TaskEnded);
-      }
-    };
-
-    loop {
-      match encoder.generate(&mut generator) {
-        Ok(buf) if buf.is_empty() => return Ok(()),
-        Ok(buf) => read
-          .blocking_send(Ok(buf))
-          .map_err(|_| SyrinxError::PeerDropped("SyrinxStreamReceiver"))?,
-        Err(e) => {
-          read
-            .blocking_send(Err(e))
-            .map_err(|_| SyrinxError::PeerDropped("SyrinxStreamReceiver"))?;
-          return Err(SyrinxError::TaskEnded);
-        }
-      }
-    }
   }
 }

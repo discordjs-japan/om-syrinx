@@ -1,15 +1,16 @@
 #![deny(clippy::all)]
 
-use encoder::EncoderConfig;
-use error::SyrinxResult;
+use std::sync::{Arc, Mutex};
+
+use error::SyrinxError;
 use napi::{
   bindgen_prelude::{AsyncTask, Buffer, Null},
-  tokio::sync::{mpsc, oneshot, Mutex},
   Env, Task,
 };
 
-use stream_receiver::SyrinxStreamReceiver;
+use encoder::EncoderConfig;
 use synthesis_option::SynthesisOption;
+use synthesizer::SyrinxSynthesizer;
 use worker::SyrinxWorker;
 
 #[macro_use]
@@ -22,8 +23,8 @@ pub const JBONSAI_VERSION: &str = env!("JBONSAI_VERSION");
 
 mod encoder;
 mod error;
-mod stream_receiver;
 mod synthesis_option;
+mod synthesizer;
 mod worker;
 
 /// Configuration for `Syrinx`.
@@ -58,35 +59,6 @@ impl Task for FromConfigTask {
   }
 }
 
-struct SynthesizeTask {
-  worker: SyrinxWorker,
-  input_text: String,
-  option: SynthesisOption,
-  construct: Option<oneshot::Sender<SyrinxResult<()>>>,
-  read: mpsc::Sender<SyrinxResult<Vec<u8>>>,
-}
-
-#[napi]
-impl Task for SynthesizeTask {
-  type Output = ();
-  type JsValue = ();
-
-  fn compute(&mut self) -> napi::Result<Self::Output> {
-    // error is handled via construct
-    let _ = self.worker.synthesize(
-      &self.input_text,
-      &self.option,
-      &mut self.construct,
-      &self.read,
-    );
-    Ok(())
-  }
-
-  fn resolve(&mut self, _: Env, _: Self::Output) -> napi::Result<Self::JsValue> {
-    Ok(())
-  }
-}
-
 // no doc comments because this will be wrapped in `index.js`/`index.d.ts`
 #[napi]
 pub struct Syrinx(SyrinxWorker);
@@ -104,50 +76,71 @@ impl Syrinx {
   }
 
   #[napi]
-  pub fn object_mode(&self) -> bool {
-    self.0.object_mode()
-  }
-
-  #[napi]
-  pub fn synthesize(
-    &self,
-    env: Env,
-    input_text: String,
-    option: SynthesisOption,
-  ) -> napi::Result<SyrinxStream> {
-    let worker = self.0.clone();
-    let (construct_tx, construct_rx) = oneshot::channel();
-    let (read_tx, read_rx) = mpsc::channel(256);
-
-    env.spawn(SynthesizeTask {
-      worker,
-      input_text,
-      option,
-      construct: Some(construct_tx),
-      read: read_tx,
-    })?;
-
-    Ok(SyrinxStream(Mutex::new(SyrinxStreamReceiver::new(
-      construct_rx,
-      read_rx,
-    ))))
+  pub fn stream(&self, input_text: String, option: SynthesisOption) -> SyrinxStream {
+    let synthesizer = SyrinxSynthesizer::new(self.0.clone(), input_text, option);
+    SyrinxStream {
+      synthesizer: Arc::new(Mutex::new(synthesizer)),
+      object_mode: self.0.object_mode(),
+    }
   }
 }
 
+pub struct ConstructTask(Arc<Mutex<SyrinxSynthesizer>>);
+
 #[napi]
-pub struct SyrinxStream(Mutex<SyrinxStreamReceiver>);
+impl Task for ConstructTask {
+  type Output = ();
+  type JsValue = Null;
+
+  fn compute(&mut self) -> napi::Result<Self::Output> {
+    let mut synthesizer = self.0.lock().map_err(|_| SyrinxError::LockFailed)?;
+    synthesizer.initialize()?;
+    Ok(())
+  }
+
+  fn resolve(&mut self, _: Env, _: Self::Output) -> napi::Result<Self::JsValue> {
+    Ok(Null)
+  }
+}
+
+pub struct ReadTask(Arc<Mutex<SyrinxSynthesizer>>);
+
+#[napi]
+impl Task for ReadTask {
+  type Output = Vec<u8>;
+  type JsValue = Option<Buffer>;
+
+  fn compute(&mut self) -> napi::Result<Self::Output> {
+    let mut synthesizer = self.0.lock().map_err(|_| SyrinxError::LockFailed)?;
+    let buf = synthesizer.synthesize()?;
+    Ok(buf)
+  }
+
+  fn resolve(&mut self, _: Env, output: Self::Output) -> napi::Result<Self::JsValue> {
+    if output.is_empty() {
+      Ok(None)
+    } else {
+      Ok(Some(Buffer::from(output)))
+    }
+  }
+}
+
+// no doc comments because this will be wrapped in `index.js`/`index.d.ts`
+#[napi]
+pub struct SyrinxStream {
+  synthesizer: Arc<Mutex<SyrinxSynthesizer>>,
+  pub object_mode: bool,
+}
 
 #[napi]
 impl SyrinxStream {
   #[napi]
-  pub async fn construct(&self) -> napi::Result<Null> {
-    self.0.lock().await.construct().await?;
-    Ok(Null)
+  pub fn construct(&self) -> AsyncTask<ConstructTask> {
+    AsyncTask::new(ConstructTask(self.synthesizer.clone()))
   }
 
   #[napi]
-  pub async fn read(&self) -> napi::Result<Option<Buffer>> {
-    let buf = self.0.lock().await.read().await?;
-    Ok(buf.map(Buffer::from))
+  pub fn read(&self) -> AsyncTask<ReadTask> {
+    AsyncTask::new(ReadTask(self.synthesizer.clone()))
   }
 }

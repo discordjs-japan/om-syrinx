@@ -136,10 +136,10 @@ export interface SyrinxConfig {
 export declare class Syrinx {
   static fromConfig(config: SyrinxConfig): Syrinx
   static fromConfigAsync(config: SyrinxConfig): Promise<Syrinx>
-  objectMode(): boolean
-  synthesize(inputText: string, option: SynthesisOption): SyrinxStream
+  stream(inputText: string, option: SynthesisOption): SyrinxStream
 }
 export declare class SyrinxStream {
+  objectMode: boolean
   construct(): Promise<null>
   read(): Promise<Buffer | null>
 }
