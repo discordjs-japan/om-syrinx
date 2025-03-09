@@ -11,7 +11,7 @@ on:
     branches: [main]
 
 jobs:
-  lint:
+  check-rust:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -24,6 +24,23 @@ jobs:
         run: cargo fmt --all --check
       - name: Cargo clippy
         run: cargo clippy --all-targets
+
+  check-js:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+      - name: Setup node
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
+        with:
+          node-version: 20
+          check-latest: true
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install
+      - name: Check
+        # TODO: other checks
+        run: pnpm type:check
 
   build:
     strategy:

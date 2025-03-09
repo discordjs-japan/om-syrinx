@@ -1,5 +1,3 @@
-// @ts-check
-
 const { it, describe, before } = require("node:test");
 const path = require("node:path");
 const assert = require("node:assert");
@@ -25,11 +23,11 @@ describe("version", () => {
   });
 
   const lockFile = fs.readFileSync("Cargo.lock", "utf-8");
-  const { package } = TOML.parse(lockFile);
+  const { package: packages } = TOML.parse(lockFile);
 
-  assert(Array.isArray(package));
+  assert(Array.isArray(packages));
   assert(
-    package.every(
+    packages.every(
       /** @returns {p is { name: string; version: string }} */
       (p) =>
         typeof p === "object" &&
@@ -41,9 +39,9 @@ describe("version", () => {
     ),
   );
 
-  const jpreprocess = package.find((p) => p.name === "jpreprocess");
+  const jpreprocess = packages.find((p) => p.name === "jpreprocess");
   assert(jpreprocess);
-  const jbonsai = package.find((p) => p.name === "jbonsai");
+  const jbonsai = packages.find((p) => p.name === "jbonsai");
   assert(jbonsai);
 
   it("should match the version of jpreprocess", () => {
@@ -67,9 +65,7 @@ async function fetchAndExtract(url, path) {
     throw new Error(`Failed to fetch dictionary:\n${await res.text()}`);
 
   await pipeline([
-    Readable.fromWeb(
-      /** @type {import("node:stream/web").ReadableStream} */ (res.body),
-    ),
+    Readable.fromWeb(res.body),
     zlib.createGunzip(),
     tar.extract(path),
   ]);
@@ -94,7 +90,7 @@ async function synthesize(syrinx, inputText, option, wait = false) {
 }
 
 /**
- * @param {BufferSource} buffer
+ * @param {crypto.webcrypto.BufferSource} buffer
  * @param {string} checksum
  */
 async function checksum(buffer, checksum) {
