@@ -1,9 +1,11 @@
 {
   "extends": "@tsconfig/node18",
   "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node",
     "types": ["node"],
     "resolveJsonModule": true,
     "checkJs": true
   },
-  "include": ["lib"]
+  "include": ["lib", "test"]
 }

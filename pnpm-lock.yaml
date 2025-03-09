@@ -17,6 +17,9 @@ importers:
       '@types/node':
         specifier: 18.19.80
         version: 18.19.80
+      '@types/tar-fs':
+        specifier: ^2.0.4
+        version: 2.0.4
       opus-decoder:
         specifier: ^0.7.6
         version: 0.7.7
@@ -45,6 +48,12 @@ packages:
 
   '@types/node@18.19.80':
     resolution: {integrity: sha512-kEWeMwMeIvxYkeg1gTc01awpwLbfMRZXdIhwRcakd/KlK53jmRC26LqcbIt7fnAQTu5GzlnWmzA3H6+l1u6xxQ==}
+
+  '@types/tar-fs@2.0.4':
+    resolution: {integrity: sha512-ipPec0CjTmVDWE+QKr9cTmIIoTl7dFG/yARCM5MqK8i6CNLIG1P8x4kwDsOQY1ChZOZjH0wO9nvfgBvWl4R3kA==}
+
+  '@types/tar-stream@3.1.3':
+    resolution: {integrity: sha512-Zbnx4wpkWBMBSu5CytMbrT5ZpMiF55qgM+EpHzR4yIDu7mv52cej8hTkOc6K+LzpkOAbxwn/m7j3iO+/l42YkQ==}
 
   '@wasm-audio-decoders/common@9.0.5':
     resolution: {integrity: sha512-b9JNh9sPAvn8PVIizNh9D60WkfQong/u9ea873H47u7zvVDLctxYIp2aZw9CQqXaQdk7JB3MoU5UHiseO40swg==}
@@ -133,6 +142,15 @@ snapshots:
   '@types/node@18.19.80':
     dependencies:
       undici-types: 5.26.5
+
+  '@types/tar-fs@2.0.4':
+    dependencies:
+      '@types/node': 18.19.80
+      '@types/tar-stream': 3.1.3
+
+  '@types/tar-stream@3.1.3':
+    dependencies:
+      '@types/node': 18.19.80
 
   '@wasm-audio-decoders/common@9.0.5':
     dependencies:
