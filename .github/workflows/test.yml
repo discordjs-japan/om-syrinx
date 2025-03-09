@@ -24,7 +24,7 @@ jobs:
         run: cargo fmt --all --check
       - name: Cargo clippy
         run: cargo clippy --all-targets
-      
+
   build:
     strategy:
       fail-fast: false
@@ -49,6 +49,8 @@ jobs:
         run: pnpm install
       - name: Build
         run: pnpm build
+      - name: Check generated files to match the repository
+        run: git diff --exit-code
       - name: Upload artifact
         uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
         with:
