@@ -13,77 +13,39 @@ jobs:
       fail-fast: false
       matrix:
         settings:
-          - host: macos-latest
-            target: x86_64-apple-darwin
-            build: |
-              pnpm build --target x86_64-apple-darwin
-              strip -x *.node
-          - host: windows-latest
-            build: pnpm build
-            target: x86_64-pc-windows-msvc
-          - host: macos-latest
-            target: aarch64-apple-darwin
-            build: |
-              pnpm build --target aarch64-apple-darwin
-              strip -x *.node
           - host: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-            build: |-
-              set -e &&
-              pnpm build --target x86_64-unknown-linux-gnu &&
-              strip *.node
           - host: ubuntu-24.04-arm
             target: aarch64-unknown-linux-gnu
-            build: |-
-              pnpm build --target aarch64-unknown-linux-gnu
-              aarch64-linux-gnu-strip *.node
+          - host: macos-latest
+            target: x86_64-apple-darwin
+          - host: macos-latest
+            target: aarch64-apple-darwin
+          - host: windows-latest
+            target: x86_64-pc-windows-msvc
           - host: windows-latest
             target: aarch64-pc-windows-msvc
-            build: pnpm build --target aarch64-pc-windows-msvc
-    name: stable - ${{ matrix.settings.target }} - node@20
+    name: stable - ${{ matrix.settings.target }} - node@22
     runs-on: ${{ matrix.settings.host }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
       - name: Setup node
         uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
-        if: ${{ !matrix.settings.docker }}
         with:
-          node-version: 20
+          node-version: 22
           check-latest: true
           cache: pnpm
       - name: Install
         uses: dtolnay/rust-toolchain@stable
-        if: ${{ !matrix.settings.docker }}
         with:
           toolchain: stable
           targets: ${{ matrix.settings.target }}
-      - name: Cache cargo
-        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
-        with:
-          path: |
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            .cargo-cache
-            target/
-          key: ${{ matrix.settings.target }}-cargo-${{ matrix.settings.host }}
-      - name: Setup config
-        run: |
-          cat <<EOF > ~/.cargo/config.toml
-          [target.aarch64-unknown-linux-musl]
-          linker = "aarch64-linux-musl-gcc"
-          rustflags = ["-C", "target-feature=-crt-static"]
-          
-          [target.aarch64-unknown-linux-gnu]
-          linker = "aarch64-linux-gnu-gcc"
-          EOF
-        shell: bash
+      - uses: Swatinem/rust-cache@f0deed1e0edfc6a9be95417288c0e1099b1eeec3 # v2.7.7
       - name: Install dependencies
         run: pnpm install
       - name: Build
-        run: ${{ matrix.settings.build }}
-        shell: bash
+        run: pnpm run build --target ${{ matrix.settings.target }}
       - name: Upload artifact
         uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
         with:
