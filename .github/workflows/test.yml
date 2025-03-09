@@ -33,14 +33,14 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
         with:
-          node-version: 20
+          node-version: 22
           check-latest: true
           cache: pnpm
       - name: Install dependencies
         run: pnpm install
       - name: Check
         # TODO: other checks
-        run: pnpm type:check
+        run: pnpm run type:check
 
   build:
     strategy:
@@ -54,7 +54,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
         with:
-          node-version: 20
+          node-version: 22
           check-latest: true
           cache: pnpm
       - name: Install
@@ -65,7 +65,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Build
-        run: pnpm build
+        run: pnpm run build:debug
       - name: Check generated files to match the repository
         run: git diff --exit-code
       - name: Upload artifact
