@@ -133,13 +133,13 @@ export interface SyrinxConfig {
   /** Encoder configuration. */
   encoder: EncoderConfig
 }
-export class Syrinx {
+export declare class Syrinx {
   static fromConfig(config: SyrinxConfig): Syrinx
   static fromConfigAsync(config: SyrinxConfig): Promise<Syrinx>
   objectMode(): boolean
   synthesize(inputText: string, option: SynthesisOption): SyrinxStream
 }
-export class SyrinxStream {
+export declare class SyrinxStream {
   construct(): Promise<null>
   read(): Promise<Buffer | null>
 }
