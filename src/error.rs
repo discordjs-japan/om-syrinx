@@ -11,12 +11,8 @@ pub enum SyrinxError {
   Weight(#[from] WeightError),
   #[error("audiopus failed")]
   Audiopus(#[from] audiopus::Error),
-  #[error("peer ({0}) dropped")]
-  PeerDropped(&'static str),
-  #[error("stream already constructed")]
-  AlreadyConstructed,
-  #[error("task ended")]
-  TaskEnded,
+  #[error("lock failed")]
+  LockFailed,
 }
 
 impl From<SyrinxError> for napi::Error {
