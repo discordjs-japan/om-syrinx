@@ -39,8 +39,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Check
-        # TODO: other checks
-        run: pnpm run type:check
+        run: pnpm run --aggregate-output --reporter-hide-prefix /check/
 
   build:
     strategy:
