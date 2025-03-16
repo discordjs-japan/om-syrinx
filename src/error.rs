@@ -1,4 +1,4 @@
-use jbonsai::{model::interporation_weight::WeightError, EngineError};
+use jbonsai::{EngineError, model::interporation_weight::WeightError};
 use jpreprocess::error::JPreprocessError;
 
 #[derive(Debug, thiserror::Error)]
