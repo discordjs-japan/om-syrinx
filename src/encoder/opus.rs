@@ -2,7 +2,7 @@ use jbonsai::{engine::Condition, speech::SpeechGenerator};
 
 use crate::error::SyrinxResult;
 
-use super::{pcm::PcmEncoder, Application, Channels, Encoder, EncoderConfig, EncoderType};
+use super::{Application, Channels, Encoder, EncoderConfig, EncoderType, pcm::PcmEncoder};
 
 pub struct OpusEncoder {
   channels: Channels,

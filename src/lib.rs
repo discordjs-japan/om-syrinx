@@ -4,8 +4,8 @@ use std::sync::{Arc, Mutex};
 
 use error::SyrinxError;
 use napi::{
-  bindgen_prelude::{AsyncTask, Buffer, Null},
   Env, Task,
+  bindgen_prelude::{AsyncTask, Buffer, Null},
 };
 
 use encoder::EncoderConfig;

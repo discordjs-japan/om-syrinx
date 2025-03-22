@@ -4,10 +4,10 @@ use jbonsai::{engine::Engine, speech::SpeechGenerator};
 use jpreprocess::{DefaultTokenizer, JPreprocess, JPreprocessConfig, SystemDictionaryConfig};
 
 use crate::{
+  SyrinxConfig,
   encoder::{Encoder, EncoderConfig},
   error::SyrinxResult,
   synthesis_option::SynthesisOption,
-  SyrinxConfig,
 };
 
 #[derive(Clone)]
