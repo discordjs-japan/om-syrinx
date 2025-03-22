@@ -4,5 +4,20 @@
     "config:js-lib",
     "github>discordjs-japan/renovate-config",
     ":assignAndReview(Mogyuchi)"
+  ],
+  "packageRules": [
+    {
+      "groupName": "napi-rs monorepo",
+      "matchUpdateTypes": [
+        "digest",
+        "patch",
+        "minor",
+        "major"
+      ],
+      "matchPackageNames": [
+        "/^napi/",
+        "/^@napi-rs//"
+      ]
+    }
   ]
 }
