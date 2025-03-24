@@ -18,8 +18,8 @@ importers:
         specifier: 18.2.4
         version: 18.2.4
       '@types/node':
-        specifier: 18.19.81
-        version: 18.19.81
+        specifier: 18.19.83
+        version: 18.19.83
       '@types/tar-fs':
         specifier: 2.0.4
         version: 2.0.4
@@ -53,8 +53,8 @@ packages:
   '@tsconfig/node18@18.2.4':
     resolution: {integrity: sha512-5xxU8vVs9/FNcvm3gE07fPbn9tl6tqGGWA9tSlwsUEkBxtRnTsNmwrV8gasZ9F/EobaSv9+nu8AxUKccw77JpQ==}
 
-  '@types/node@18.19.81':
-    resolution: {integrity: sha512-7KO9oZ2//ivtSsryp0LQUqq79zyGXzwq1WqfywpC9ucjY7YyltMMmxWgtRFRKCxwa7VPxVBVy4kHf5UC1E8Lug==}
+  '@types/node@18.19.83':
+    resolution: {integrity: sha512-D69JeR5SfFS5H6FLbUaS0vE4r1dGhmMBbG4Ed6BNS4wkDK8GZjsdCShT5LCN59vOHEUHnFCY9J4aclXlIphMkA==}
 
   '@types/tar-fs@2.0.4':
     resolution: {integrity: sha512-ipPec0CjTmVDWE+QKr9cTmIIoTl7dFG/yARCM5MqK8i6CNLIG1P8x4kwDsOQY1ChZOZjH0wO9nvfgBvWl4R3kA==}
@@ -148,18 +148,18 @@ snapshots:
 
   '@tsconfig/node18@18.2.4': {}
 
-  '@types/node@18.19.81':
+  '@types/node@18.19.83':
     dependencies:
       undici-types: 5.26.5
 
   '@types/tar-fs@2.0.4':
     dependencies:
-      '@types/node': 18.19.81
+      '@types/node': 18.19.83
       '@types/tar-stream': 3.1.3
 
   '@types/tar-stream@3.1.3':
     dependencies:
-      '@types/node': 18.19.81
+      '@types/node': 18.19.83
 
   '@wasm-audio-decoders/common@9.0.5':
     dependencies:
