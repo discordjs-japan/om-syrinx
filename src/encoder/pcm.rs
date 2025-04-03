@@ -28,7 +28,7 @@ impl PcmEncoder {
     }
 
     self.speech.iter().take(generated).flat_map(|f| {
-      iter::repeat(f.clamp(i16::MIN as f64, i16::MAX as f64) as i16).take(self.channels as usize)
+      iter::repeat_n(f.clamp(i16::MIN as f64, i16::MAX as f64) as i16, self.channels as usize)
     })
   }
 }
