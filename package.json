@@ -21,7 +21,7 @@
     "@tsconfig/node18": "18.2.4",
     "@types/node": "18.19.87",
     "@types/tar-fs": "2.0.4",
-    "opus-decoder": "0.7.8",
+    "opus-decoder": "0.7.9",
     "smol-toml": "1.3.4",
     "tar-fs": "3.0.8",
     "typescript": "5.8.3"
