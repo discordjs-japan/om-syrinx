@@ -39,5 +39,5 @@
     "postinstall": "node lib/install.js",
     "test": "node --test test/index.js"
   },
-  "packageManager": "pnpm@10.11.0"
+  "packageManager": "pnpm@10.11.1"
 }
