@@ -22,7 +22,7 @@
     "@types/node": "18.19.115",
     "@types/tar-fs": "2.0.4",
     "opus-decoder": "0.7.10",
-    "smol-toml": "1.3.4",
+    "smol-toml": "1.4.1",
     "tar-fs": "3.0.10",
     "typescript": "5.8.3"
   },
