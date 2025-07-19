@@ -1,6 +1,6 @@
 /// Which encoder to use.
 #[napi]
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum EncoderType {
   /// Encodes audio data with Opus codec.
   /// One pushed chunk corresponds to one encoded frame.
@@ -21,7 +21,7 @@ impl EncoderType {
 
 /// Number of channels for generated audio.
 #[napi]
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum Channels {
   /// Generates mono audio.
   Mono = 1,
@@ -40,7 +40,7 @@ impl From<Channels> for audiopus::Channels {
 
 /// Opus encoder mode(application).
 #[napi]
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum Application {
   /// [`audiopus::Application::Voip`]
   Voip,
