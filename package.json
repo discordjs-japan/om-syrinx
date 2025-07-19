@@ -4,7 +4,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "napi": {
-    "name": "om-syrinx"
+    "binaryName": "om-syrinx"
   },
   "files": [
     "lib",
@@ -16,22 +16,22 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@napi-rs/cli": "2.18.4",
+    "@napi-rs/cli": "3.0.0",
     "@taplo/cli": "0.7.0",
-    "@tsconfig/node18": "18.2.4",
-    "@types/node": "18.19.86",
+    "@tsconfig/node20": "20.1.6",
+    "@types/node": "20.19.9",
     "@types/tar-fs": "2.0.4",
-    "opus-decoder": "0.7.7",
-    "smol-toml": "1.3.3",
-    "tar-fs": "3.0.8",
+    "opus-decoder": "0.7.10",
+    "smol-toml": "1.4.1",
+    "tar-fs": "3.1.0",
     "typescript": "5.8.3"
   },
   "engines": {
-    "node": ">= 18"
+    "node": ">= 20"
   },
   "scripts": {
-    "build": "napi build --js false --dts lib/native.d.ts --no-const-enum --platform --release",
-    "build:debug": "napi build --js false --dts lib/native.d.ts --no-const-enum --platform",
+    "build": "napi build --no-js --dts lib/native.d.ts --no-const-enum --platform --release",
+    "build:debug": "napi build --no-js --dts lib/native.d.ts --no-const-enum --platform",
     "format:check:toml": "taplo fmt --check",
     "format:fix:toml": "taplo fmt",
     "type:check": "tsc -p jsconfig.json",
@@ -39,5 +39,5 @@
     "postinstall": "node lib/install.js",
     "test": "node --test test/index.js"
   },
-  "packageManager": "pnpm@10.8.1"
+  "packageManager": "pnpm@10.13.1"
 }
