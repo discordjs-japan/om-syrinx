@@ -19,7 +19,7 @@
     "@napi-rs/cli": "3.0.0",
     "@taplo/cli": "0.7.0",
     "@tsconfig/node18": "18.2.4",
-    "@types/node": "18.19.119",
+    "@types/node": "18.19.120",
     "@types/tar-fs": "2.0.4",
     "opus-decoder": "0.7.10",
     "smol-toml": "1.4.1",
