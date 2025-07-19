@@ -19,5 +19,19 @@
         "/^@napi-rs//"
       ]
     }
+  ],
+  "customManagers": [
+    {
+      "customType": "jsonata",
+      "fileFormat": "toml",
+      "managerFilePatterns": ["^rust-toolchain\\.toml$"],
+      "matchStrings": [
+        "toolchain.{ 'currentValue': channel }"
+      ],
+      "depNameTemplate": "rust-lang/rust",
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "semver",
+      "depTypeTemplate": "dependencies"
+    }
   ]
 }
