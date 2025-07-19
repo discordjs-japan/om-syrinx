@@ -18,8 +18,8 @@
   "devDependencies": {
     "@napi-rs/cli": "3.0.0",
     "@taplo/cli": "0.7.0",
-    "@tsconfig/node18": "18.2.4",
-    "@types/node": "18.19.119",
+    "@tsconfig/node20": "20.1.6",
+    "@types/node": "20.19.9",
     "@types/tar-fs": "2.0.4",
     "opus-decoder": "0.7.10",
     "smol-toml": "1.4.1",
@@ -27,7 +27,7 @@
     "typescript": "5.8.3"
   },
   "engines": {
-    "node": ">= 18"
+    "node": ">= 20"
   },
   "scripts": {
     "build": "napi build --no-js --dts lib/native.d.ts --no-const-enum --platform --release",
