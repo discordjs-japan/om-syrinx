@@ -30,8 +30,8 @@
     "node": ">= 18"
   },
   "scripts": {
-    "build": "napi build --js false --dts lib/native.d.ts --no-const-enum --platform --release",
-    "build:debug": "napi build --js false --dts lib/native.d.ts --no-const-enum --platform",
+    "build": "napi build --no-js --dts lib/native.d.ts --no-const-enum --platform --release",
+    "build:debug": "napi build --no-js --dts lib/native.d.ts --no-const-enum --platform",
     "format:check:toml": "taplo fmt --check",
     "format:fix:toml": "taplo fmt",
     "type:check": "tsc -p jsconfig.json",
