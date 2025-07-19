@@ -17,6 +17,10 @@ audiopus = "=0.3.0-rc.0"
 serde_json = "=1.0.141"
 thiserror = "=2.0.12"
 
+# https://github.com/Lakelezz/audiopus_sys/pull/23
+[patch.crates-io]
+audiopus_sys = { git = 'https://github.com/sevenc-nanashi/audiopus_sys', branch = 'chore/update-opus' }
+
 [build-dependencies]
 napi-build = "=2.2.2"
 cargo-lock = "=10.1.0"
