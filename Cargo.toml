@@ -20,7 +20,7 @@ thiserror = "=2.0.12"
 # https://github.com/Lakelezz/audiopus_sys/pull/23
 [patch.crates-io.audiopus_sys]
 git = "https://github.com/sevenc-nanashi/audiopus_sys"
-rev = "00e9d168493710193ee133bc7fbb50715a1f6e61"
+rev = "00e9d168493710193ee133bc7fbb50715a1f6e61" # sevenc-nanashi:chore/update-opus
 
 [build-dependencies]
 napi-build = "=2.2.2"
