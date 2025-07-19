@@ -13,7 +13,7 @@ om-syrinxでは，入力全体を一度に処理するのではなく，順番�
 以下の3つの手順を実行してください．
 - ライブラリ本体をインストールする：
 
-  `npm install github:discordjs-japan/om-syrinx#semver:^0.4.3`を実行してください．
+  `npm install github:discordjs-japan/om-syrinx#semver:^0.4.3`<!-- x-release-please-version -->を実行してください．
 - jpreprocess用の辞書をダウンロードする：
 
   [jpreprocessのリリース](https://github.com/jpreprocess/jpreprocess/releases/v0.12.0)から[辞書 (`naist-jdic-jpreprocess.tar.gz`)](https://github.com/jpreprocess/jpreprocess/releases/download/v0.12.0/naist-jdic-jpreprocess.tar.gz) をダウンロードし，カレントディレクトリに解凍してください．
@@ -61,7 +61,7 @@ const resource = createAudioResource(stream, { inputType: StreamType.Opus });
 - `encoder`：エンコード設定
   - `EncoderType.Opus`の場合，Opusでエンコードされます．`@discordjs/voice`の`StreamType.Opus`に対応します．
   - `EncoderType.Raw`の場合，16ビットPCMに変換されます．`@discordjs/voice`の`StreamType.Raw`に対応します．
-  
+
   その他の設定については，`EncoderConfig`を参照してください．
 
 `syrinx.synthesize()`で音声を合成する際に渡す引数は以下の通りです：
