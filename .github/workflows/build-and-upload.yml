@@ -1,14 +1,18 @@
-name: CI
+name: build-and-upload
 env:
   APP_NAME: om-syrinx
 
 on:
-  push:
-    tags:
-      - v*.*.*
+  workflow_call:
+    inputs:
+      tag-name:
+        required: true
+        type: string
 
 jobs:
   build:
+    permissions:
+      contents: write
     strategy:
       fail-fast: false
       matrix:
@@ -48,30 +52,8 @@ jobs:
           name: bindings-${{ matrix.settings.target }}
           path: ${{ env.APP_NAME }}.*.node
           if-no-files-found: error
-
-  create-release:
-    name: Create Release
-    permissions:
-      contents: write
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download All Artifacts
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
-      - name: Check Tag
-        id: check-tag
+      - name: Upload to release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if [[ ${{ github.event.ref }} =~ ^refs/tags/v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "Not prerelease"
-            echo "prerelease=false" >> $GITHUB_OUTPUT
-          else
-            echo "Prerelease"
-            echo "prerelease=true" >> $GITHUB_OUTPUT
-          fi
-      - name: Create release
-        uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: ${{ steps.check-tag.outputs.prerelease == 'true' }}
-          files: |
-            **/*.node
+          gh release upload ${{ inputs.tag-name }} ${{ env.APP_NAME }}.*.node --clobber
