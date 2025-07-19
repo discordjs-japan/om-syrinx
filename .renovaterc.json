@@ -30,10 +30,13 @@
     {
       "customType": "jsonata",
       "fileFormat": "toml",
-      "fileMatch": ["^rust-toolchain\\.toml$"],
+      "managerFilePatterns": ["^rust-toolchain\\.toml$"],
       "matchStrings": [
-        "toolchain.( $contains(channel, /^\\d+\\.\\d+\\.\\d+$/) ? { 'currentValue': channel, 'depName': 'rust-lang/rust', 'datasource': 'github-releases', 'versioning': 'semver' } : $contains(channel, /^nightly-/) ? { 'currentValue': $substringAfter(channel, 'nightly-'), 'depName': 'rust-nightly', 'datasource': 'custom.rust-nightly', 'versioning': 'azure-rest-api' } : {} )"
+        "toolchain.{ 'currentValue': channel }"
       ],
+      "depNameTemplate": "rust-lang/rust",
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "semver",
       "depTypeTemplate": "dependencies"
     }
   ]
