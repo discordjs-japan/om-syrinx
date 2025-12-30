@@ -29,7 +29,7 @@ pub enum Channels {
   Stereo = 2,
 }
 
-impl From<Channels> for audiopus::Channels {
+impl From<Channels> for opus2::Channels {
   fn from(channels: Channels) -> Self {
     match channels {
       Channels::Mono => Self::Mono,
@@ -50,7 +50,7 @@ pub enum Application {
   LowDelay,
 }
 
-impl From<Application> for audiopus::Application {
+impl From<Application> for opus2::Application {
   fn from(application: Application) -> Self {
     match application {
       Application::Voip => Self::Voip,

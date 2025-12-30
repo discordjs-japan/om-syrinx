@@ -9,8 +9,8 @@ pub enum SyrinxError {
   Engine(#[from] EngineError),
   #[error("synthesis option invalid: {0}")]
   Weight(#[from] WeightError),
-  #[error("audiopus failed")]
-  Audiopus(#[from] audiopus::Error),
+  #[error("opus2 failed")]
+  Opus2(#[from] opus2::Error),
   #[error("lock failed")]
   LockFailed,
 }
@@ -27,7 +27,7 @@ impl From<SyrinxError> for napi::Error {
       }
       SyrinxError::Engine(err) => napi::Error::new(napi::Status::GenericFailure, err),
       SyrinxError::Weight(err) => napi::Error::new(napi::Status::InvalidArg, err),
-      SyrinxError::Audiopus(err) => napi::Error::new(napi::Status::GenericFailure, err),
+      SyrinxError::Opus2(err) => napi::Error::new(napi::Status::GenericFailure, err),
       e => napi::Error::new(napi::Status::GenericFailure, e),
     }
   }

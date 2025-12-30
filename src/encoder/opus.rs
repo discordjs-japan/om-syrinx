@@ -7,7 +7,7 @@ use super::{Application, Channels, Encoder, EncoderConfig, EncoderType, pcm::Pcm
 pub struct OpusEncoder {
   channels: Channels,
   pcm_encoder: PcmEncoder,
-  opus_encoder: audiopus::coder::Encoder,
+  opus_encoder: opus2::Encoder,
   output: Vec<u8>,
 }
 
@@ -18,7 +18,7 @@ impl Encoder for OpusEncoder {
   where
     Self: Sized,
   {
-    let sample_rate = audiopus::SampleRate::try_from(condition.get_sampling_frequency() as i32)?;
+    let sample_rate = condition.get_sampling_frequency();
     let channels = config.channels.unwrap_or(Channels::Stereo);
     let mode = config.mode.unwrap_or(Application::Voip);
 
@@ -32,7 +32,7 @@ impl Encoder for OpusEncoder {
     };
 
     let pcm_encoder = PcmEncoder::new(condition, &pcm_config)?;
-    let opus_encoder = audiopus::coder::Encoder::new(sample_rate, channels.into(), mode.into())?;
+    let opus_encoder = opus2::Encoder::new(sample_rate as u32, channels.into(), mode.into())?;
 
     Ok(Self {
       output: vec![0; pcm_encoder.speech_len() * channels as usize], // TODO: better capacity estimation
