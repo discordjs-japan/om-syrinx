@@ -18,7 +18,7 @@
   "devDependencies": {
     "@napi-rs/cli": "3.5.0",
     "@taplo/cli": "0.7.0",
-    "@tsconfig/node20": "20.1.8",
+    "@tsconfig/node22": "22.0.0",
     "@types/node": "20.19.27",
     "@types/tar-fs": "2.0.4",
     "opus-decoder": "0.7.10",
