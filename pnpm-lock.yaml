@@ -24,8 +24,8 @@ importers:
         specifier: 2.0.4
         version: 2.0.4
       opus-decoder:
-        specifier: 0.7.10
-        version: 0.7.10
+        specifier: 0.7.11
+        version: 0.7.11
       smol-toml:
         specifier: 1.6.0
         version: 1.6.0
@@ -726,8 +726,8 @@ packages:
   once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
 
-  opus-decoder@0.7.10:
-    resolution: {integrity: sha512-qUZdyAK+kKy/wUSd/oZ0ULE9U/yskp332n2oBvSP/Jz/wHsHiVRg33f/tRUR8TRiw+ka7AQUclxcr5TbUJo+VA==}
+  opus-decoder@0.7.11:
+    resolution: {integrity: sha512-+e+Jz3vGQLxRTBHs8YJQPRPc1Tr+/aC6coV/DlZylriA29BdHQAYXhvNRKtjftof17OFng0+P4wsFIqQu3a48A==}
 
   pump@3.0.3:
     resolution: {integrity: sha512-todwxLMY7/heScKmntwQG8CXVkWUOdYxIvY2s0VWAAMh/nd8SoYiRaKjlr7+iCs984f2P8zvrfWcDDYVb73NfA==}
@@ -1367,7 +1367,7 @@ snapshots:
     dependencies:
       wrappy: 1.0.2
 
-  opus-decoder@0.7.10:
+  opus-decoder@0.7.11:
     dependencies:
       '@wasm-audio-decoders/common': 9.0.7
 
