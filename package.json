@@ -24,7 +24,7 @@
     "opus-decoder": "0.7.10",
     "smol-toml": "1.6.0",
     "tar-fs": "3.1.1",
-    "typescript": "5.8.3"
+    "typescript": "5.9.3"
   },
   "engines": {
     "node": ">= 20"
