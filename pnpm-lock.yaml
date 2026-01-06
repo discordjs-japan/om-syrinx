@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@napi-rs/cli':
-        specifier: 3.5.0
-        version: 3.5.0(@types/node@20.19.27)
+        specifier: 3.5.1
+        version: 3.5.1(@types/node@20.19.27)
       '@taplo/cli':
         specifier: 0.7.0
         version: 0.7.0
@@ -184,8 +184,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@napi-rs/cli@3.5.0':
-    resolution: {integrity: sha512-bJsDvAa9qK9VMkFhr780XWfQlK+GDlAX8qpK20buSmA0ld6nxCtiZ5a0J45zbd0FWT+VTZE1/u8VPH2vLfnVvw==}
+  '@napi-rs/cli@3.5.1':
+    resolution: {integrity: sha512-XBfLQRDcB3qhu6bazdMJsecWW55kR85l5/k0af9BIBELXQSsCFU0fzug7PX8eQp6vVdm7W/U3z6uP5WmITB2Gw==}
     engines: {node: '>= 16'}
     hasBin: true
     peerDependencies:
@@ -934,7 +934,7 @@ snapshots:
     optionalDependencies:
       '@types/node': 20.19.27
 
-  '@napi-rs/cli@3.5.0(@types/node@20.19.27)':
+  '@napi-rs/cli@3.5.1(@types/node@20.19.27)':
     dependencies:
       '@inquirer/prompts': 8.1.0(@types/node@20.19.27)
       '@napi-rs/cross-toolchain': 1.0.3
