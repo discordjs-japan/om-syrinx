@@ -26,6 +26,9 @@ importers:
       opus-decoder:
         specifier: 0.7.11
         version: 0.7.11
+      prettier:
+        specifier: 3.7.4
+        version: 3.7.4
       smol-toml:
         specifier: 1.6.0
         version: 1.6.0
@@ -729,6 +732,11 @@ packages:
   opus-decoder@0.7.11:
     resolution: {integrity: sha512-+e+Jz3vGQLxRTBHs8YJQPRPc1Tr+/aC6coV/DlZylriA29BdHQAYXhvNRKtjftof17OFng0+P4wsFIqQu3a48A==}
 
+  prettier@3.7.4:
+    resolution: {integrity: sha512-v6UNi1+3hSlVvv8fSaoUbggEM5VErKmmpGA7Pl3HF8V6uKY7rvClBOJlH6yNwQtfTueNkGVpOv/mtWL9L4bgRA==}
+    engines: {node: '>=14'}
+    hasBin: true
+
   pump@3.0.3:
     resolution: {integrity: sha512-todwxLMY7/heScKmntwQG8CXVkWUOdYxIvY2s0VWAAMh/nd8SoYiRaKjlr7+iCs984f2P8zvrfWcDDYVb73NfA==}
 
@@ -1372,6 +1380,8 @@ snapshots:
   opus-decoder@0.7.11:
     dependencies:
       '@wasm-audio-decoders/common': 9.0.7
+
+  prettier@3.7.4: {}
 
   pump@3.0.3:
     dependencies:
