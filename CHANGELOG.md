@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.5.1](https://github.com/discordjs-japan/om-syrinx/compare/v0.5.0...v0.5.1) (2026-01-11)
+
+
+### Dependencies
+
+* lock file maintenance ([#207](https://github.com/discordjs-japan/om-syrinx/issues/207)) ([c1de490](https://github.com/discordjs-japan/om-syrinx/commit/c1de490bc589ecdbc5ffd049cd9e19eb28230a08))
+* replace audiopus with opus2 ([#187](https://github.com/discordjs-japan/om-syrinx/issues/187)) ([4b92608](https://github.com/discordjs-japan/om-syrinx/commit/4b9260860da572fc40bf4ca77ac5bc98f35bee98))
+* update rust crate serde_json to v1.0.148 ([#198](https://github.com/discordjs-japan/om-syrinx/issues/198)) ([37b3ecc](https://github.com/discordjs-japan/om-syrinx/commit/37b3eccaaea209f76dd745dc7d83090080cdb3a5))
+* update rust crate serde_json to v1.0.149 ([#209](https://github.com/discordjs-japan/om-syrinx/issues/209)) ([0ca0441](https://github.com/discordjs-japan/om-syrinx/commit/0ca0441e430788781cd15b9f0a1714202aaa4a13))
+
 ## [0.5.0](https://github.com/discordjs-japan/om-syrinx/compare/v0.4.3...v0.5.0) (2025-10-21)
 
 
