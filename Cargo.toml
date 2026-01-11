@@ -8,8 +8,8 @@ crate-type = ["cdylib"]
 
 [dependencies]
 # Default enable napi4 feature, see https://nodejs.org/api/n-api.html#node-api-version-matrix
-napi = { version = "=3.8.1", default-features = false }
-napi-derive = "=3.5.0"
+napi = { version = "=3.8.2", default-features = false }
+napi-derive = "=3.5.1"
 
 jpreprocess = "=0.12.0"
 jbonsai = "=0.4.0"
