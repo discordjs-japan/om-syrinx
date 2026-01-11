@@ -93,7 +93,7 @@ impl Task for ConstructTask {
   type JsValue = Null;
 
   fn compute(&mut self) -> napi::Result<Self::Output> {
-    let mut synthesizer = self.0.lock().map_err(|_| SyrinxError::LockFailed)?;
+    let mut synthesizer = self.0.try_lock().map_err(|_| SyrinxError::LockFailed)?;
     synthesizer.initialize()?;
     Ok(())
   }
@@ -111,7 +111,7 @@ impl Task for ReadTask {
   type JsValue = Option<Buffer>;
 
   fn compute(&mut self) -> napi::Result<Self::Output> {
-    let mut synthesizer = self.0.lock().map_err(|_| SyrinxError::LockFailed)?;
+    let mut synthesizer = self.0.try_lock().map_err(|_| SyrinxError::LockFailed)?;
     let buf = synthesizer.synthesize()?;
     Ok(buf)
   }
