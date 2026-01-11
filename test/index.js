@@ -4,6 +4,7 @@ const assert = require("node:assert");
 const zlib = require("node:zlib");
 const fs = require("node:fs");
 const { Readable } = require("node:stream");
+const { buffer } = require("node:stream/consumers");
 const { pipeline } = require("node:stream/promises");
 const crypto = require("node:crypto");
 const {
@@ -71,22 +72,6 @@ async function fetchAndExtract(url, path) {
 }
 
 /**
- * @param {Syrinx} syrinx
- * @param {string} inputText
- * @param {import("../lib").SynthesisOption} option
- * @returns {Promise<Buffer[]>}
- */
-async function synthesize(syrinx, inputText, option) {
-  const stream = syrinx.synthesize(inputText, option);
-  /** @type {Buffer[]} */
-  const result = [];
-  for await (const item of stream) {
-    result.push(item);
-  }
-  return result;
-}
-
-/**
  * @param {crypto.webcrypto.BufferSource} buffer
  * @param {string} checksum
  */
@@ -124,17 +109,11 @@ describe("synthesis", () => {
       encoder: { type: EncoderType.Raw },
     });
 
-    const bonsai = await synthesize(pcm, "盆栽", {});
-    await checksum(
-      Buffer.concat(bonsai),
-      "36050aef60896f56bbfe59868a3f57b6bbc5b147",
-    );
+    const bonsai = await buffer(pcm.synthesize("盆栽", {}));
+    assert.strictEqual(bonsai, "36050aef60896f56bbfe59868a3f57b6bbc5b147");
 
-    const isBonsai = await synthesize(pcm, "これは，盆栽ですか？", {});
-    await checksum(
-      Buffer.concat(isBonsai),
-      "c0e3f8773a47534862f7e553fb00d48022496b19",
-    );
+    const isBonsai = await buffer(pcm.synthesize("これは，盆栽ですか？", {}));
+    assert.strictEqual(isBonsai, "c0e3f8773a47534862f7e553fb00d48022496b19");
   });
 
   it("should synthesize identical Opus data", async () => {
@@ -154,7 +133,7 @@ describe("synthesis", () => {
       encoder: { type: EncoderType.Opus },
     });
 
-    const bonsai = await synthesize(opus, "盆栽", {});
+    const bonsai = await opus.synthesize("盆栽", {}).toArray();
     assert.strictEqual(bonsai.length, 78);
 
     const bonsaiDecoded = decoder.decodeFrames(bonsai);
@@ -174,7 +153,9 @@ describe("synthesis", () => {
 
     await decoder.reset();
 
-    const isBonsai = await synthesize(opus, "これは，盆栽ですか？", {});
+    const isBonsai = await opus
+      .synthesize("これは，盆栽ですか？", {})
+      .toArray();
     assert.strictEqual(isBonsai.length, 136);
 
     const isBonsaiDecoded = decoder.decodeFrames(isBonsai);
