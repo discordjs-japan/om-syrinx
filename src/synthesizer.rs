@@ -1,7 +1,10 @@
 use jbonsai::speech::SpeechGenerator;
 
 use crate::{
-  encoder::Encoder, error::SyrinxResult, synthesis_option::SynthesisOption, worker::SyrinxWorker,
+  encoder::Encoder,
+  error::{SyrinxError, SyrinxResult},
+  synthesis_option::SynthesisOption,
+  worker::SyrinxWorker,
 };
 
 pub enum SyrinxSynthesizer {
@@ -28,10 +31,7 @@ impl SyrinxSynthesizer {
 
   pub fn synthesize(&mut self) -> SyrinxResult<Vec<u8>> {
     match self {
-      Self::Uninitialized(_, _, _) => {
-        self.initialize()?;
-        self.synthesize()
-      }
+      Self::Uninitialized(_, _, _) => Err(SyrinxError::NotInitialized),
       Self::Initialized(generator, encoder) => encoder.generate(generator),
     }
   }

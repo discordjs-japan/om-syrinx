@@ -13,6 +13,8 @@ pub enum SyrinxError {
   Opus2(#[from] opus2::Error),
   #[error("lock failed")]
   LockFailed,
+  #[error("not initialized")]
+  NotInitialized,
 }
 
 impl From<SyrinxError> for napi::Error {
