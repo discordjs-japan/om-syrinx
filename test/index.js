@@ -5,7 +5,6 @@ const zlib = require("node:zlib");
 const fs = require("node:fs");
 const { Readable } = require("node:stream");
 const { pipeline } = require("node:stream/promises");
-const { setTimeout } = require("node:timers/promises");
 const crypto = require("node:crypto");
 const {
   OM_SYRINX_VERSION,
@@ -75,16 +74,14 @@ async function fetchAndExtract(url, path) {
  * @param {Syrinx} syrinx
  * @param {string} inputText
  * @param {import("../lib").SynthesisOption} option
- * @param {boolean} [wait]
  * @returns {Promise<Buffer[]>}
  */
-async function synthesize(syrinx, inputText, option, wait = false) {
+async function synthesize(syrinx, inputText, option) {
   const stream = syrinx.synthesize(inputText, option);
   /** @type {Buffer[]} */
   const result = [];
   for await (const item of stream) {
     result.push(item);
-    if (wait) await setTimeout(20);
   }
   return result;
 }
@@ -127,7 +124,7 @@ describe("synthesis", () => {
       encoder: { type: EncoderType.Raw },
     });
 
-    const bonsai = await synthesize(pcm, "盆栽", {}, true);
+    const bonsai = await synthesize(pcm, "盆栽", {});
     await checksum(
       Buffer.concat(bonsai),
       "36050aef60896f56bbfe59868a3f57b6bbc5b147",
@@ -157,7 +154,7 @@ describe("synthesis", () => {
       encoder: { type: EncoderType.Opus },
     });
 
-    const bonsai = await synthesize(opus, "盆栽", {}, true);
+    const bonsai = await synthesize(opus, "盆栽", {});
     assert.strictEqual(bonsai.length, 78);
 
     const bonsaiDecoded = decoder.decodeFrames(bonsai);
