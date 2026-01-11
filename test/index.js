@@ -110,10 +110,10 @@ describe("synthesis", () => {
     });
 
     const bonsai = await buffer(pcm.synthesize("盆栽", {}));
-    assert.strictEqual(bonsai, "36050aef60896f56bbfe59868a3f57b6bbc5b147");
+    await checksum(bonsai, "36050aef60896f56bbfe59868a3f57b6bbc5b147");
 
     const isBonsai = await buffer(pcm.synthesize("これは，盆栽ですか？", {}));
-    assert.strictEqual(isBonsai, "c0e3f8773a47534862f7e553fb00d48022496b19");
+    await checksum(isBonsai, "c0e3f8773a47534862f7e553fb00d48022496b19");
   });
 
   it("should synthesize identical Opus data", async () => {
