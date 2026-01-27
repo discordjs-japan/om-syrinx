@@ -35,7 +35,9 @@ impl Encoder for OpusEncoder {
     let opus_encoder = opus2::Encoder::new(sample_rate as u32, channels.into(), mode.into())?;
 
     Ok(Self {
-      output: vec![0; pcm_encoder.speech_len() * channels as usize], // TODO: better capacity estimation
+      // The maximum representable length is 255*4+255=1275 bytes.
+      // https://datatracker.ietf.org/doc/html/rfc6716#section-3.2.1
+      output: vec![0; 1275],
       channels,
       pcm_encoder,
       opus_encoder,
