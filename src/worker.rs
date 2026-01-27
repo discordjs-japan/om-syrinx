@@ -1,7 +1,8 @@
 use std::sync::Arc;
 
 use jbonsai::{engine::Engine, speech::SpeechGenerator};
-use jpreprocess::{DefaultTokenizer, JPreprocess, JPreprocessConfig, SystemDictionaryConfig};
+use jpreprocess::{DefaultTokenizer, JPreprocess, SystemDictionaryConfig, error::JPreprocessError};
+use lindera_dictionary::loader::user_dictionary::UserDictionaryLoader;
 
 use crate::{
   SyrinxConfig,
@@ -19,13 +20,15 @@ pub struct SyrinxWorker {
 
 impl SyrinxWorker {
   pub fn from_config(config: &SyrinxConfig) -> SyrinxResult<Self> {
-    let jpreprocess = JPreprocess::from_config(JPreprocessConfig {
-      dictionary: SystemDictionaryConfig::File(config.dictionary.clone().into()),
-      user_dictionary: config
-        .user_dictionary
-        .as_ref()
-        .map(|path| serde_json::json!({ "path": path })),
-    })?;
+    let system_dictionary =
+      SystemDictionaryConfig::File(config.dictionary.clone().into()).load()?;
+    let user_dictionary = config
+      .user_dictionary
+      .as_ref()
+      .map(|path| UserDictionaryLoader::load_from_bin(path).map_err(JPreprocessError::LinderaError))
+      .transpose()?;
+
+    let jpreprocess = JPreprocess::with_dictionaries(system_dictionary, user_dictionary);
     let jbonsai = Engine::load(&config.models)?;
 
     Ok(Self {
