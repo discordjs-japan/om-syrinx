@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.5.1](https://github.com/discordjs-japan/om-syrinx/compare/v0.5.0...v0.5.1) (2026-01-27)
+
+
+### Performance Improvements
+
+* small optimizations ([#213](https://github.com/discordjs-japan/om-syrinx/issues/213)) ([e496a18](https://github.com/discordjs-japan/om-syrinx/commit/e496a1817d7e4595eb5f40c1045b34b1eb20fa03))
+
+
+### Dependencies
+
+* lock file maintenance ([#207](https://github.com/discordjs-japan/om-syrinx/issues/207)) ([c1de490](https://github.com/discordjs-japan/om-syrinx/commit/c1de490bc589ecdbc5ffd049cd9e19eb28230a08))
+* lock file maintenance ([#221](https://github.com/discordjs-japan/om-syrinx/issues/221)) ([0edc341](https://github.com/discordjs-japan/om-syrinx/commit/0edc34185c25f8b5ddf474643e8a4df63faf8296))
+* replace audiopus with opus2 ([#187](https://github.com/discordjs-japan/om-syrinx/issues/187)) ([4b92608](https://github.com/discordjs-japan/om-syrinx/commit/4b9260860da572fc40bf4ca77ac5bc98f35bee98))
+* update napi-rs monorepo ([#210](https://github.com/discordjs-japan/om-syrinx/issues/210)) ([48431fb](https://github.com/discordjs-japan/om-syrinx/commit/48431fbfb03ac0b101b32d7ace8532dbee06ad13))
+* update rust crate jbonsai to v0.4.1 ([#205](https://github.com/discordjs-japan/om-syrinx/issues/205)) ([df1f0e6](https://github.com/discordjs-japan/om-syrinx/commit/df1f0e67f988beadb8070149eca3a5053cb3a1a8))
+* update rust crate jpreprocess to v0.13.2 ([#206](https://github.com/discordjs-japan/om-syrinx/issues/206)) ([85553ba](https://github.com/discordjs-japan/om-syrinx/commit/85553bad233d7f5ed7e3fbe1b4d14ceb1c16683b))
+* update rust crate serde_json to v1.0.148 ([#198](https://github.com/discordjs-japan/om-syrinx/issues/198)) ([37b3ecc](https://github.com/discordjs-japan/om-syrinx/commit/37b3eccaaea209f76dd745dc7d83090080cdb3a5))
+* update rust crate serde_json to v1.0.149 ([#209](https://github.com/discordjs-japan/om-syrinx/issues/209)) ([0ca0441](https://github.com/discordjs-japan/om-syrinx/commit/0ca0441e430788781cd15b9f0a1714202aaa4a13))
+* update rust crate thiserror to v2.0.18 ([#220](https://github.com/discordjs-japan/om-syrinx/issues/220)) ([48c2cf4](https://github.com/discordjs-japan/om-syrinx/commit/48c2cf4b83b38e073c3a906e864ff44a7204da21))
+
 ## [0.5.0](https://github.com/discordjs-japan/om-syrinx/compare/v0.4.3...v0.5.0) (2025-10-21)
 
 
