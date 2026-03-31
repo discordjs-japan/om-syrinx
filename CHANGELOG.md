@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.2](https://github.com/discordjs-japan/om-syrinx/compare/v0.5.1...v0.5.2) (2026-03-31)
+
+
+### Dependencies
+
+* switch `opus2` backend to `mousiki` to enable a successful Windows build ([#228](https://github.com/discordjs-japan/om-syrinx/issues/228)) ([be7257b](https://github.com/discordjs-japan/om-syrinx/commit/be7257b921806c065ead8855599ceb950d5fba56))
+* update napi-rs monorepo ([#225](https://github.com/discordjs-japan/om-syrinx/issues/225)) ([5f6fe42](https://github.com/discordjs-japan/om-syrinx/commit/5f6fe42bfd869db2863c7486784908230fb80c62))
+
 ## [0.5.1](https://github.com/discordjs-japan/om-syrinx/compare/v0.5.0...v0.5.1) (2026-01-27)
 
 
