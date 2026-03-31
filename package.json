@@ -24,7 +24,7 @@
     "opus-decoder": "0.7.11",
     "prettier": "3.8.1",
     "smol-toml": "1.6.1",
-    "tar-fs": "3.1.1",
+    "tar-fs": "3.1.2",
     "typescript": "5.9.3"
   },
   "engines": {
