@@ -13,7 +13,7 @@ napi-derive = "=3.5.3"
 
 jpreprocess = "=0.13.2"
 jbonsai = "=0.4.1"
-lindera-dictionary = { version = "=1.4.1", default-features = false }
+lindera-dictionary = { version = "=1.5.1", default-features = false }
 opus2 = { version = "0.4.0", default-features = false, features = [
   "backend-mousiki",
 ] }
