@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.4](https://github.com/discordjs-japan/om-syrinx/compare/v0.5.3...v0.5.4) (2026-05-02)
+
+
+### Dependencies
+
+* update napi-rs monorepo ([#244](https://github.com/discordjs-japan/om-syrinx/issues/244)) ([279ce78](https://github.com/discordjs-japan/om-syrinx/commit/279ce78a3eb43d6b1cb0c7d8de7469f586a60f3c))
+* update napi-rs monorepo ([#250](https://github.com/discordjs-japan/om-syrinx/issues/250)) ([d46f4e3](https://github.com/discordjs-japan/om-syrinx/commit/d46f4e3031822ecd3a3c931647e28058406f93a3))
+
 ## [0.5.3](https://github.com/discordjs-japan/om-syrinx/compare/v0.5.2...v0.5.3) (2026-03-31)
 
 
