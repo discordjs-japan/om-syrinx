@@ -16,7 +16,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@napi-rs/cli": "3.7.0",
+    "@napi-rs/cli": "3.7.2",
     "@taplo/cli": "0.7.0",
     "@tsconfig/node20": "20.1.9",
     "@types/node": "20.19.43",
