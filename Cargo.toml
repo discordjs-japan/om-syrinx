@@ -11,7 +11,7 @@ crate-type = ["cdylib"]
 napi = { version = "=3.9.3", default-features = false }
 napi-derive = "=3.5.6"
 
-jpreprocess = "=0.13.2"
+jpreprocess = "=0.15.0"
 jbonsai = "=0.4.1"
 lindera-dictionary = { version = "=1.4.1", default-features = false }
 opus2 = { version = "0.4.0", default-features = false, features = [
