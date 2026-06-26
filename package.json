@@ -23,7 +23,7 @@
     "@types/tar-fs": "2.0.4",
     "opus-decoder": "0.7.11",
     "prettier": "3.8.4",
-    "smol-toml": "1.6.1",
+    "smol-toml": "1.7.0",
     "tar-fs": "3.1.2",
     "typescript": "5.9.3"
   },
