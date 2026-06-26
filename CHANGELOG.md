@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.5.4](https://github.com/discordjs-japan/om-syrinx/compare/v0.5.3...v0.5.4) (2026-06-26)
+
+
+### Dependencies
+
+* update napi-rs monorepo ([#244](https://github.com/discordjs-japan/om-syrinx/issues/244)) ([279ce78](https://github.com/discordjs-japan/om-syrinx/commit/279ce78a3eb43d6b1cb0c7d8de7469f586a60f3c))
+* update napi-rs monorepo ([#250](https://github.com/discordjs-japan/om-syrinx/issues/250)) ([d46f4e3](https://github.com/discordjs-japan/om-syrinx/commit/d46f4e3031822ecd3a3c931647e28058406f93a3))
+* update napi-rs monorepo ([#258](https://github.com/discordjs-japan/om-syrinx/issues/258)) ([4316ae1](https://github.com/discordjs-japan/om-syrinx/commit/4316ae13937fe2b7128c75b3aa4c9d23296d07f7))
+* update napi-rs monorepo ([#270](https://github.com/discordjs-japan/om-syrinx/issues/270)) ([93f9488](https://github.com/discordjs-japan/om-syrinx/commit/93f94880bd75fb65a177b86b5426cf6e62961902))
+* update napi-rs monorepo ([#271](https://github.com/discordjs-japan/om-syrinx/issues/271)) ([6bc77d4](https://github.com/discordjs-japan/om-syrinx/commit/6bc77d4a148c517d57746599fb1381f9cdbc349c))
+* update napi-rs monorepo to v3.9.1 ([#262](https://github.com/discordjs-japan/om-syrinx/issues/262)) ([60d4afd](https://github.com/discordjs-japan/om-syrinx/commit/60d4afdd7ff57d38ea1ea921823563533be9fdbc))
+* update rust crate serde_json to v1.0.150 ([#257](https://github.com/discordjs-japan/om-syrinx/issues/257)) ([3157655](https://github.com/discordjs-japan/om-syrinx/commit/3157655c3875ef1bd2e5557926e1d2ed7e72f66c))
+
 ## [0.5.3](https://github.com/discordjs-japan/om-syrinx/compare/v0.5.2...v0.5.3) (2026-03-31)
 
 
