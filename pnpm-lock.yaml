@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@napi-rs/cli':
-        specifier: 3.7.3
-        version: 3.7.3(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)(@types/node@20.19.43)
+        specifier: 3.7.4
+        version: 3.7.4(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)(@types/node@20.19.43)
       '@taplo/cli':
         specifier: 0.7.0
         version: 0.7.0
@@ -187,8 +187,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@napi-rs/cli@3.7.3':
-    resolution: {integrity: sha512-iu5BOoYjYVixp5jwE7JniHvg72XuKWXUfXteu+6Gt/XY4/mslsS+Qbipleg1+3CAUGHkWc+ebaMJj7Pc93BXSQ==}
+  '@napi-rs/cli@3.7.4':
+    resolution: {integrity: sha512-idELIUceJ9zPgx/shcMt1fSSsteFG68v56RIXi4qUm7OYuJOt7CoMj2KnHVmbOqXgUHWQU1lCULrtQdZDG4F5A==}
     engines: {node: '>= 16'}
     hasBin: true
     peerDependencies:
@@ -954,7 +954,7 @@ snapshots:
     optionalDependencies:
       '@types/node': 20.19.43
 
-  '@napi-rs/cli@3.7.3(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)(@types/node@20.19.43)':
+  '@napi-rs/cli@3.7.4(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)(@types/node@20.19.43)':
     dependencies:
       '@inquirer/prompts': 8.5.2(@types/node@20.19.43)
       '@napi-rs/cross-toolchain': 1.0.3(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)
