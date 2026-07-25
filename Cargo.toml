@@ -22,7 +22,7 @@ thiserror = "=2.0.18"
 
 [build-dependencies]
 napi-build = "=2.3.2"
-cargo-lock = "=11.0.1"
+cargo-lock = "=11.1.0"
 
 [profile.release]
 lto = true
