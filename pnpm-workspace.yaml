@@ -1,0 +1,5 @@
+saveExact: true
+strictPeerDependencies: true
+
+# Disabled because it is managed by Renovate using packageManager field
+updateNotifier: false
