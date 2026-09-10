@@ -42,5 +42,11 @@
     "postinstall": "node lib/install.js",
     "test": "node --test test/index.js"
   },
-  "packageManager": "pnpm@12.3.4"
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.3.4",
+      "onFail": "download"
+    }
+  }
 }
