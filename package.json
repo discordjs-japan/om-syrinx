@@ -1,6 +1,6 @@
 {
   "name": "@discordjs-japan/om-syrinx",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "napi": {
